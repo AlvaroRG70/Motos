@@ -1,0 +1,25 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Motos</h1>
+        {% for moto in motos_desc %}
+        
+            <div>
+                <h2>Nombre: {{moto.nombre}}</h2>
+                <h2>Marca: {{moto.marca}}</h2>
+                <h2>Modelo: {{moto.modelo}}</h2>
+                <h2>precio: {{moto.precio}}</h2>
+                <h2>anyo: {{moto.año}}</h2>
+
+                <p>------------------------------------------------------------------</p>
+            </div>
+        
+        {% endfor %}
+
+    </body>
+
+
+</html>

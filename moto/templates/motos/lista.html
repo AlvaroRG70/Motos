@@ -1,0 +1,30 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Motos</h1>
+        {% for moto in lista_moto %}
+        
+            <div>
+                <h2>Nombre: {{moto.nombre}}</h2>
+                <h2>Marca: {{moto.marca}}</h2>
+                <h2>Modelo: {{moto.modelo}}</h2>
+                <h2>precio: {{moto.precio}}</h2>
+                <h2>Usuario</h2>
+                <ul>
+                    {% for usuario in moto.usuario.all%}
+                        <li>{{usuario.nombre}}</li>
+                        <li>{{usuario.apellidos}}</li>
+                    {%endfor%}
+                </ul>
+                <p>------------------------------------------------------------------</p>
+            </div>
+        
+        {% endfor %}
+
+    </body>
+
+
+</html>
