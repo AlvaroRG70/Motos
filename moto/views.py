@@ -14,11 +14,20 @@ def lista_motos(request):
 #Una url que muestre todas las motos que están asociadas a un usuario, ordenadas por año descendente.
 
 def motos_desc(request):
-    motos = (Moto.objects.prefetch_related("usuario")).all()
+    motos = (Moto.objects.prefetch_related("usuario", Prefetch("VentaMoto"))).all()
     motos = motos.order_by("-año")
     return render(request, "motos/desc.html", {"motos_desc":motos})
 
-#Crear una URL que muestre todas los eventos que tengan un texto en concreto en la descripción a la hora de asignarlas a una reserva.
+#Crear una URL que muestre todas los eventos que tengan un texto en concreto en la descripción a la hora de asignarlas a una reserva (usuario).
+
+def eventos_reservados(request,texto):
+    eventos = (Evento.objects.prefetch_related("usuario", Prefetch("ReservaEvento"))).all()
+    eventos = eventos.filter(descripcion__contains = texto)
+    return render(request, "evento/evento.html", {"reserva_evento":eventos})
+
+
+
+#Crea una URL que muestre la compra más reciente realizada por un usuario, incluyendo el nombre del producto, la cantidad, el precio y la fecha de compra.
 
 """
 Lista de Usuarios:

@@ -1,4 +1,4 @@
-#!/home/alumnado/Escritorio/2DAW_NUEVA/Servidor/proyecto/Motos/myvenv/bin/python
+#!/home/alvaro/Motos/myvenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
