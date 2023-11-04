@@ -1,0 +1,21 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Eventos</h1>
+            {% for cliente in ult_cliente.usuario.all %}
+            
+                <div>
+                    <h2>Nombre: {{cliente.nombre}}</h2>
+                    <h2>Apellidos: {{cliente.apellidos}}</h2>
+                    <p>------------------------------------------------------------------</p>
+                </div>
+            
+            {% endfor %}
+
+    </body>
+
+
+</html>

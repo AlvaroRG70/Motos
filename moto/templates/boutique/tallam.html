@@ -1,0 +1,25 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Eventos</h1>
+        {% for ropa in talla_m %}
+        
+            <div>
+                <h2>Nombre: {{ropa.nombre}}</h2>
+                <h2>Tipo: {{ropa.tipo}}</h2>
+                <h2>Descripcion: {{ropa.descripcion}}</h2>
+                <h2>Talla: {{ropa.talla}}</h2>
+                <h2>Stock: {{ropa.stcok}}</h2>
+                
+                <p>------------------------------------------------------------------</p>
+            </div>
+        
+        {% endfor %}
+
+    </body>
+
+
+</html>

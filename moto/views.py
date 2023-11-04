@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from moto.models import Moto, Evento, ReservaEvento
+from moto.models import Moto, Evento, ReservaEvento, Boutique
 from django.db.models import Q,Prefetch
 
 # Create your views here.
@@ -27,12 +27,26 @@ def eventos_reservados(request,texto):
     return render(request, "evento/evento.html", {"reserva_evento":eventos})
 
 #crear una URl que muestre los usuarios asigados a una reserva de evento ordenados por fecha de evento de forma ascendente
+#no se mostrar la fecha de reserva
 
 def evento_ascendente(request):
     evento = (Evento.objects.prefetch_related("usuario").order_by("reservaevento__fecha_reserva")).all()
-    return render(request, "evento/reserva.html", {"reserv_asc":evento})
+    return render(request, "evento/reserva.html", {"reserv_asc":evento, "fecha":reserva})
 
 #Crea una URL que muestre la compra más reciente realizada por un usuario, incluyendo el nombre del producto, la cantidad, el precio y la fecha de compra.
+
+# Crear una URL que obtenga el último usuario que ha reservado un evento.
+
+def ult_reserva(request):
+    cliente = Evento.objects.prefetch_related("usuario").all()
+    cliente = cliente.order_by("-reservaevento__fecha_reserva")[:1].get()
+    return render(request, "evento/ult_cliente.html", {"ult_cliente":cliente})
+
+#muestra el nombre de los elementos de la boutique cuya talla sea Medium
+
+def talla_boutique(request):
+    tallas = (Boutique.objects.filter(talla = "MM")).all()
+    return render(request, "boutique/tallam.html", {"talla_m":tallas})
 
 """
 Lista de Usuarios:
