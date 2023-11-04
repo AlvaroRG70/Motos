@@ -1,0 +1,31 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Eventos</h1>
+        {% for evento in reserv_asc %}
+        
+            <div>
+                <h2>Nombre: {{evento.nombre}}</h2>
+                <h2>Fecha: {{evento.fecha}}</h2>
+                <h2>Hora: {{evento.hora}}</h2>
+                <h2>Fecha Reserva: </h2>
+                
+                <h2>Usuario</h2>
+                <ul>
+                    {% for usuario in evento.usuario.all %}
+                        <li>{{usuario.nombre}}</li>
+                        <li>{{usuario.apellidos}}</li>
+                    {%endfor%}
+                </ul>
+                <p>------------------------------------------------------------------</p>
+            </div>
+        
+        {% endfor %}
+
+    </body>
+
+
+</html>

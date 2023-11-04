@@ -90,7 +90,7 @@ class Evento(models.Model):
     hora = models.TimeField()
     ubicacion = models.CharField(max_length=50)
     descripcion = models.TextField()
-    usuario = models.ManyToManyField(Usuario, through="ReservaEvento")
+    usuario = models.ManyToManyField(Usuario, through="ReservaEvento", related_name="reserva_evento")
     
 class CompraMasReciente(models.Model):
     nombre_producto = models.CharField(max_length=50)
