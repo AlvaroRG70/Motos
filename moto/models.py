@@ -74,7 +74,7 @@ class Concesionario(models.Model):
     telefono = models.IntegerField(unique=True, blank=True)
     fecha_apertura = models.DateField()
     descripcion = models.TextField()
-    trabajador = models.ForeignKey(Trabajador, on_delete=models.CASCADE)
+    trabajador = models.ForeignKey(Trabajador, on_delete=models.CASCADE, related_name = "trabajador_concesionario")
     moto = models.ManyToManyField(Moto, through="VentaConcesionario")
 
 class Taller(models.Model):
@@ -113,3 +113,7 @@ class ReservaEvento(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha_reserva = models.DateTimeField(default=timezone.now)
+    
+    
+    
+    

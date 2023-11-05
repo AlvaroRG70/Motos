@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from moto.models import Moto, Evento, ReservaEvento, Boutique
+from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario
 from django.db.models import Q,Prefetch
 
 # Create your views here.
@@ -15,7 +15,7 @@ def lista_motos(request):
 #Una url que muestre todas las motos que están asociadas a un usuario, ordenadas por año descendente.
 
 def motos_desc(request):
-    motos = (Moto.objects.prefetch_related("usuario", Prefetch("VentaMoto"))).all()
+    motos = (Moto.objects.prefetch_related("usuario")).all()
     motos = motos.order_by("-año")
     return render(request, "motos/desc.html", {"motos_desc":motos})
 
@@ -31,7 +31,7 @@ def eventos_reservados(request,texto):
 
 def evento_ascendente(request):
     evento = (Evento.objects.prefetch_related("usuario").order_by("reservaevento__fecha_reserva")).all()
-    return render(request, "evento/reserva.html", {"reserv_asc":evento, "fecha":reserva})
+    return render(request, "evento/reserva.html", {"reserv_asc":evento, "fecha":evento})
 
 #Crea una URL que muestre la compra más reciente realizada por un usuario, incluyendo el nombre del producto, la cantidad, el precio y la fecha de compra.
 
@@ -48,31 +48,29 @@ def talla_boutique(request):
     tallas = (Boutique.objects.filter(talla = "MM")).all()
     return render(request, "boutique/tallam.html", {"talla_m":tallas})
 
-"""
-Lista de Usuarios:
-Crea una URL que muestre una lista de todos los usuarios registrados en la aplicación con sus nombres y apellidos.
+#muentra las motos con sus usuarios asociados con año de moto mayor a 10000
 
-Tareas de un Trabajador:
-Crea una URL que muestre todas las motos asociadas a un trabajador específico, ordenadas por la marca y el modelo.
+def moto_anyos(request):
+    moto = (Moto.objects.prefetch_related("usuario")).all()
+    moto = moto.filter(año__gt = 10000)
+    return render(request, "motos/motoanyo.html", {"moto_anyo":moto})
 
-Accesorios de una Moto:
-Crea una URL que muestre todos los accesorios disponibles para una moto en particular, incluyendo su nombre, marca y precio.
+#muestra los concesionarios que no tienen un trabajador asociado
+#no salen resultados porque no me deja crear uno sin trabajador
 
-Boutique de Concesionario:
-Crea una URL que muestre todos los productos disponibles en la boutique de un concesionario en particular, con detalles como nombre, tipo, descripción, talla y precio.
+def concesionario_sin(request):
+    concesionario = (Concesionario.objects.select_related("trabajador")).all()
+    concesionario = concesionario.filter(trabajador = None)
+    return render(request, "concesionario/sin.html", {"concesionario_sin":concesionario})
 
-Eventos de un Usuario:
-Crea una URL que muestre todos los eventos a los que un usuario ha reservado asistencia, incluyendo detalles como nombre del evento, fecha y hora.
+#muestra los concesionarios que abrieron en 1983 con sus trabajadores
 
-Compras más Recientes de un Usuario:
-Crea una URL que muestre la compra más reciente realizada por un usuario, incluyendo el nombre del producto, la cantidad, el precio y la fecha de compra.
+def nacidos_2018(request, anyo):
+    concesionario = (Concesionario.objects.select_related("trabajador").prefetch_related(Prefetch("trabajador_concesionario")).filter(fecha_apertura__year=anyo)).all()
+    return render(request, "concesionario/anyo_apert.html", {"anyo_apertura":concesionario})
 
-Ventas de una Moto:
-Crea una URL que muestre todas las ventas relacionadas con una moto en particular, incluyendo detalles de la compra y el usuario.
+#muestra los concesionarios cuya fecha de apertura sea menor a 2000 y contengan en su descripcion la letra i
 
-Ventas de un Concesionario:
-Crea una URL que muestre todas las ventas realizadas por un concesionario en particular, incluyendo detalles de la compra y la moto.
-
-Reservas de un Evento:
-Crea una URL que muestre todas las reservas de un evento específico, incluyendo detalles de la reserva y el usuario.
-"""
+def menor_2000(request, anyo, letra):
+    concesionario = (Concesionario.objects.filter(fecha_apertura__year__lt=anyo).filter(descripcion__contains = letra)).all()
+    return render(request, "concesionario/contieneanyo.html", {"contieneanyo":concesionario})

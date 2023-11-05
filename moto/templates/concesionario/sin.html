@@ -1,0 +1,21 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Concesionarios sin trabajador</h1>
+            {% for conc in concesionario_sin%}
+            
+                <div>
+                    <h2>Nombre: {{coc.nombre}}</h2>
+                    <h2>Ubicación: {{conc.ubicacion}}</h2>
+                    <p>------------------------------------------------------------------</p>
+                </div>
+            
+            {% endfor %}
+
+    </body>
+
+
+</html>

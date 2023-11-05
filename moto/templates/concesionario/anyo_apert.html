@@ -1,0 +1,34 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Concesionarios</h1>
+        {% for conc in anyo_apertura %}
+        
+            <div>
+                <h2>Nombre: {{conc.nombre}}</h2>
+                <h2>Ubicacion: {{conc.ubicacion}}</h2>
+                <h2>Telefono: {{conc.telefono}}</h2>
+                <h2>Fecha apertura: {{conc.fecha_apertura}}</h2>
+                <h2>Descripcion: {{conc.descripcion}}</h2>
+
+                <h2>Trabajador</h2>
+                <ul>
+                    {% for trabajador in conc.trabajador_concesionario.all %}
+                        <li>Nombre: {{trabajador.nombre}}</li>
+                        <li>Apellidos: {{trabajador.apellidos}}</li>
+                    {%endfor%}
+                </ul>
+
+
+                <p>------------------------------------------------------------------</p>
+            </div>
+        
+        {% endfor %}
+
+    </body>
+
+
+</html>
