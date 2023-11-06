@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler404, handler400, handler403, handler500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
     path("", include("moto.urls"))
 ]
+
+handler404 = "moto.views.mi_error_404"
+handler400 = "moto.views.mi_error_400"
+handler403 = "moto.views.mi_error_403"
+handler500 = "moto.views.mi_error_500"

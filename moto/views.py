@@ -74,3 +74,16 @@ def nacidos_2018(request, anyo):
 def menor_2000(request, anyo, letra):
     concesionario = (Concesionario.objects.filter(fecha_apertura__year__lt=anyo).filter(descripcion__contains = letra)).all()
     return render(request, "concesionario/contieneanyo.html", {"contieneanyo":concesionario})
+
+
+def mi_error_404(request, exception=None):
+    return render(request, "errores/404.html",None,None,404)
+
+def mi_error_400(request, exception=None):
+    return render(request, "errores/400.html",None,None,400)
+
+def mi_error_403(request, exception=None):
+    return render(request, "errores/403.html",None,None,403)
+
+def mi_error_500(request, exception=None):
+    return render(request, "errores/500.html",None,None,500)
