@@ -5,7 +5,7 @@
         <h2>Listado de enlaces</h2>
         <ul>
             <li><a href="{% url 'lista_moto' %}">Listado de motos</a></li>
-            <li><a href="{% url 'motos_desc' %}">Listado de motos ordenados de forma descendente</a></li>
+            <li><a href="{% url 'motos_desc' 1%}">Listado de motos ordenados de forma descendente</a></li>
             <li><a href="{% url 'reserva_evento' 'a' %}">Eventos con la letra a</a></li>
             <li><a href="{% url 'reserv_asc'%}">Eventos con su fecha de reserva de forma ascendente</a></li>
             <li><a href="{% url 'ult_cliente'%}">Ultimo cliente en reservar un evento</a></li>
@@ -14,6 +14,8 @@
             <li><a href="{% url 'concesionario_sin'%}">Concesionarios sin trabajador</a></li>
             <li><a href="{% url 'anyo_apertura' 2002 %}">Concesionarios que abrieron en 2014 con trabajadores</a></li>
             <li><a href="{% url 'contieneanyo' 2000 'i' %}">Concesionarios que abrieron antes del 2000 y contienen en la descripcion la letra i</a></li>
+            <li><a href="{% url 'operacionesmedia' %}">Agrupaciones</a></li>
+            <li><a href="{% url 'nombre_desc' %}">Nombre dentro de descripcion</a></li>
         </ul>
             
     </body>

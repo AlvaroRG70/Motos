@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario
-from django.db.models import Q,Prefetch
+from django.db.models import Q,Prefetch, Avg,Max,Min, F
 
 # Create your views here.
 def index(request):
@@ -14,9 +14,9 @@ def lista_motos(request):
 
 #Una url que muestre todas las motos que están asociadas a un usuario, ordenadas por año descendente.
 
-def motos_desc(request):
+def motos_desc(request, idus):
     motos = (Moto.objects.prefetch_related("usuario")).all()
-    motos = motos.order_by("-año")
+    motos = motos.filter(usuario__id = idus).order_by("-año")
     return render(request, "motos/desc.html", {"motos_desc":motos})
 
 #Crear una URL que muestre todas los eventos que tengan un texto en concreto en la descripción a la hora de asignarlas a una reserva (usuario).
@@ -81,6 +81,21 @@ def menor_2000(request, anyo, letra):
     return render(request, "concesionario/contieneanyo.html", {"contieneanyo":concesionario})
 
 
+#haz la media, el max y el minimo del precio de todas las motos
+
+def operaciones(request):
+    resultado = Moto.objects.aggregate(Avg("precio"),Max("precio"),Min("precio"))
+    media = resultado["precio__avg"]
+    maximo = resultado["precio__max"]
+    minimo = resultado["precio__min"]
+    return render(request, "motos/operaciones.html", {"media":media, "maximo":maximo, "minimo":minimo})
+
+#url que muestre los eventos que contienen su nombre en la descripcion
+
+def nombre_descripcion(request):
+    eventos = (Evento.objects.prefetch_related("usuario")).all()
+    eventos = eventos.filter(descripcion__contains = F("nombre"))
+    return render(request, "evento/contiene.html", {"nombre_desc":eventos})
 
 
 
