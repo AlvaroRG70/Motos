@@ -30,8 +30,8 @@ def eventos_reservados(request,texto):
 #no se mostrar la fecha de reserva
 
 def evento_ascendente(request):
-    evento = (Evento.objects.prefetch_related("usuario").order_by("reservaevento__fecha_reserva")).all()
-    return render(request, "evento/reserva.html", {"reserv_asc":evento, "fecha":evento})
+    evento = (ReservaEvento.objects.select_related("usuario", "evento").order_by("fecha_reserva")).all()
+    return render(request, "evento/reserva.html", {"reserv_asc":evento})
 
 
 # Crear una URL que obtenga el último usuario que ha reservado un evento.

@@ -5,21 +5,16 @@
     </head>
     <body>
         <h1>Eventos</h1>
-        {% for evento in reserv_asc %}
+        {% for reserv in reserv_asc %}
         
             <div>
-                <h2>Nombre: {{evento.nombre}}</h2>
-                <h2>Fecha: {{evento.fecha}}</h2>
-                <h2>Hora: {{evento.hora}}</h2>
-                <h2>Fecha Reserva: {{fecha.reserva_evento}}</h2>
+                <h2>Nombre: {{reserv.evento.nombre}}</h2>
+                <h2>Fecha: {{reserv.evento.fecha}}</h2>
+                <h2>Hora: {{reserv.evento.hora}}</h2>
+                <h2>Fecha Reserva: {{reserv.fecha.reserva_evento}}</h2>
                 
-                <h2>Usuario</h2>
-                <ul>
-                    {% for usuario in evento.usuario.all %}
-                        <li>{{usuario.nombre}}</li>
-                        <li>{{usuario.apellidos}}</li>
-                    {%endfor%}
-                </ul>
+                <h2>Usuario: {{reserv.usuario.nombre}}</h2>
+                
                 <p>------------------------------------------------------------------</p>
             </div>
         
