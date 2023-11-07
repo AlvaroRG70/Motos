@@ -10,14 +10,7 @@ class Usuario(models.Model):
     fecha_nacimiento = models.DateField()
     fecha_registro = models.DateTimeField(default=timezone.now)
     preferencias = models.CharField(max_length=100)
-    
-    
-class Trabajador(models.Model):
-    nombre = models.CharField(max_length=50)
-    apellidos = models.CharField(max_length=100)
-    correo_electronico = models.CharField(max_length=100, unique=True, blank=True)
-    contraseña = models.CharField(max_length=50)
-    fecha_nacimiento = models.DateField()
+
     
 class Moto(models.Model):
     nombre = models.CharField(max_length=50)
@@ -74,15 +67,26 @@ class Concesionario(models.Model):
     telefono = models.IntegerField(unique=True, blank=True)
     fecha_apertura = models.DateField()
     descripcion = models.TextField()
-    trabajador = models.ForeignKey(Trabajador, on_delete=models.CASCADE, related_name = "trabajador_concesionario")
+    
     moto = models.ManyToManyField(Moto, through="VentaConcesionario")
+    
 
 class Taller(models.Model):
     nombre = models.CharField(max_length=50)
     direccion = models.CharField(max_length=50)
     telefono = models.IntegerField(unique=True, blank=True)
     concesionario = models.OneToOneField(Concesionario, on_delete=models.CASCADE)
-    trabajador = models.ForeignKey(Trabajador, on_delete=models.CASCADE)
+
+class Trabajador(models.Model):
+    nombre = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=100)
+    correo_electronico = models.CharField(max_length=100, unique=True, blank=True)
+    contraseña = models.CharField(max_length=50)
+    fecha_nacimiento = models.DateField()
+    concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name = "trabajador_concesionario")
+    taller = models.ForeignKey(Taller, on_delete=models.CASCADE, related_name="trabajador_taller")
+
+
     
 class Evento(models.Model):
     nombre = models.CharField(max_length=50)
@@ -92,28 +96,22 @@ class Evento(models.Model):
     descripcion = models.TextField()
     usuario = models.ManyToManyField(Usuario, through="ReservaEvento", related_name = "reserva_evento")
     
-class CompraMasReciente(models.Model):
-    nombre_producto = models.CharField(max_length=50)
-    cantidad = models.IntegerField()
-    precio = models.FloatField()
-    fecha_compra = models.DateTimeField(timezone.now)
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
 
 class VentaMoto(models.Model):
     datos_compra = models.CharField(max_length=50)
-    moto = models.ForeignKey(Moto, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    moto = models.ForeignKey(Moto, on_delete=models.CASCADE, related_name="ventamoto_moto")
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="ventamoto_usuario")
     
 class VentaConcesionario(models.Model):
     datos = models.CharField(max_length=50)
-    concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE)
-    moto = models.ForeignKey(Moto, on_delete=models.CASCADE)
+    concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name="ventaconc_concesionario")
+    moto = models.ForeignKey(Moto, on_delete=models.CASCADE, related_name="ventaconc_moto")
     
 class ReservaEvento(models.Model):
-    evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE, related_name="reservaevento_evento")
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="reservaevento_usuario")
     fecha_reserva = models.DateTimeField(default=timezone.now)
     
     
-    
+        
     

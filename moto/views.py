@@ -33,13 +33,18 @@ def evento_ascendente(request):
     evento = (Evento.objects.prefetch_related("usuario").order_by("reservaevento__fecha_reserva")).all()
     return render(request, "evento/reserva.html", {"reserv_asc":evento, "fecha":evento})
 
-#Crea una URL que muestre la compra más reciente realizada por un usuario, incluyendo el nombre del producto, la cantidad, el precio y la fecha de compra.
 
 # Crear una URL que obtenga el último usuario que ha reservado un evento.
-
+'''
 def ult_reserva(request):
     cliente = Evento.objects.prefetch_related("usuario").all()
     cliente = cliente.order_by("-reservaevento__fecha_reserva")[:1].get()
+    return render(request, "evento/ult_cliente.html", {"ult_cliente":cliente})
+'''
+
+def ult_reserva(request):
+    cliente = ReservaEvento.objects.select_related("usuario", "evento").all()
+    cliente = cliente.order_by("-fecha_reserva")[:1].get()
     return render(request, "evento/ult_cliente.html", {"ult_cliente":cliente})
 
 #muestra el nombre de los elementos de la boutique cuya talla sea Medium
@@ -56,17 +61,17 @@ def moto_anyos(request):
     return render(request, "motos/motoanyo.html", {"moto_anyo":moto})
 
 #muestra los concesionarios que no tienen un trabajador asociado
-#no salen resultados porque no me deja crear uno sin trabajador
+
 
 def concesionario_sin(request):
-    concesionario = (Concesionario.objects.select_related("trabajador")).all()
-    concesionario = concesionario.filter(trabajador = None)
+    concesionario = (Concesionario.objects.prefetch_related(Prefetch("trabajador_concesionario"))).all()
+    concesionario = concesionario.filter(trabajador_concesionario__nombre = None)
     return render(request, "concesionario/sin.html", {"concesionario_sin":concesionario})
 
 #muestra los concesionarios que abrieron en 1983 con sus trabajadores
 
 def nacidos_2018(request, anyo):
-    concesionario = (Concesionario.objects.select_related("trabajador").prefetch_related(Prefetch("trabajador_concesionario")).filter(fecha_apertura__year=anyo)).all()
+    concesionario = (Concesionario.objects.prefetch_related(Prefetch("trabajador_concesionario")).filter(fecha_apertura__year=anyo)).all()
     return render(request, "concesionario/anyo_apert.html", {"anyo_apertura":concesionario})
 
 #muestra los concesionarios cuya fecha de apertura sea menor a 2000 y contengan en su descripcion la letra i

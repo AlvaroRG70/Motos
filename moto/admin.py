@@ -8,7 +8,7 @@ from .models import Boutique
 from .models import Concesionario
 from .models import Taller
 from .models import Evento
-from .models import CompraMasReciente
+
 from .models import VentaMoto
 from .models import VentaConcesionario
 from .models import ReservaEvento
@@ -23,7 +23,7 @@ admin.site.register(Boutique)
 admin.site.register(Concesionario)
 admin.site.register(Taller)
 admin.site.register(Evento)
-admin.site.register(CompraMasReciente)
+
 admin.site.register(VentaMoto)
 admin.site.register(VentaConcesionario)
 admin.site.register(ReservaEvento)
