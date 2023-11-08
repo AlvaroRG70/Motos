@@ -145,16 +145,9 @@ def cuentas_bancos(request, nombre):
 #Obtener todos los modelos principales que tengan una media de votaciones mayor del 2,5.
 
 
-def media_puntuacion(request):
-    motos = Moto.objects.select_related("usuario", "moto")
-    resultado = ValoracionMoto.objects.aggregate(Avg("puntuacion"))
-    motos = motos.filter(puntuacion__avg__gt = 2.5)
-    return render(request, "examen/hola.html", {"media":motos})
 
 def modelos_con_media_mayor_2_5(request):
-    # Obtener todos los modelos de moto con su media de puntuación
     modelos_moto = Moto.objects.annotate(media_puntuacion=Avg('valoracion_moto__puntuacion')).filter(media_puntuacion__gt=2.5)
-
     return render(request, "examen/media.html", {"motos": modelos_moto})
 
 
