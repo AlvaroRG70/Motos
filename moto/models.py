@@ -28,7 +28,8 @@ class Moto(models.Model):
     modelo = models.CharField(max_length=50)
     año = models.IntegerField()
     precio = models.FloatField()
-    usuario = models.ManyToManyField(Usuario, through="VentaMoto")
+    usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
+    comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
 
 class DatosTecnicosMoto(models.Model):
     num_serie = models.IntegerField(unique=True, blank=True)
@@ -113,5 +114,25 @@ class ReservaEvento(models.Model):
     fecha_reserva = models.DateTimeField(default=timezone.now)
     
     
-        
+#creamos el modelo puntuacion
+
+class ValoracionMoto(models.Model):
+    puntuacion = models.IntegerField(default=0)
+    comentario = models.TextField()
+    fecha_votacion = models.DateTimeField(default=timezone.now)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="valoracion_usuario")
+    moto = models.ForeignKey(Moto, on_delete=models.CASCADE, related_name="valoracion_moto")
     
+
+# creamos el modelo de cuenta bancaria
+
+class CuentaBancaria(models.Model):
+    num_cuenta = models.CharField(max_length=20, unique=True, blank=True)
+    BANCO = [
+        ("CA","Caixa"),
+        ("BB","BBVA"),
+        ("UC","UNICAJA"),
+        ("IN","ING"),
+    ]
+    banco = models.CharField(max_length=2, choices=BANCO)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="cuenta_usuario")

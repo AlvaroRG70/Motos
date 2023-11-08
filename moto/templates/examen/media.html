@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Motos</title>
+</head>
+<body>
+    <h1>Modelos de Moto con Media de Puntuación Mayor a 2.5</h1>
+    <ul>
+        {% for modelo in motos %}
+            <li>Nombre: {{ modelo.nombre }}</li>
+            <li>Marca: {{ modelo.marca}}</li>
+            <li>Modelo: {{ modelo.modelo }}</li>
+            <li>Media de Puntuación: {{ modelo.media_puntuacion }}</li>
+            <p>---------------------------</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

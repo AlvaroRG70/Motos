@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario
+from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
 
 # Create your views here.
@@ -110,3 +110,55 @@ def mi_error_403(request, exception=None):
 
 def mi_error_500(request, exception=None):
     return render(request, "errores/500.html",None,None,500)
+
+
+#El último voto que se realizó en un modelo principal en concreto, y mostrar el comentario, la votación e información del usuario o cliente que lo realizó.
+
+def ult_votacion(request, id_moto):
+    votacion = (ValoracionMoto.objects.select_related("usuario", "moto")).all()
+    votacion = votacion.filter(moto__id = id_moto).order_by("fecha_votacion")[:1].get()
+    return render(request, "examen/ult_votacion.html", {"votacion_ultima":votacion})
+
+
+#Todos los modelos principales que tengan votos con una puntuación numérica igual a 3 y que realizó un usuario o cliente en concreto. 
+
+def con_3_puntos(request, id_usuario):
+    puntos = (ValoracionMoto.objects.select_related("usuario", "moto"))
+    puntos = puntos.filter(usuario__id = id_usuario).filter(puntuacion = 3)
+    return render(request, "examen/3_puntos.html", {"3_puntos":puntos})
+
+
+#Todos los usuarios o clientes que no han votado nunca y mostrar información sobre estos usuarios y clientes al completo..
+
+def usuario_sin_voto(request):
+    puntos = Usuario.objects.filter(valoracion_usuario = None).all()
+    return render(request, "examen/usuario_sin.html", {"usuario_sin":puntos})
+
+#Obtener las cuentas bancarias que sean de la Caixa o de Unicaja y que el propietario tenga un nombre que contenga un texto en concreto, por ejemplo “Juan”
+
+def cuentas_bancos(request, nombre):
+    cuentas = (CuentaBancaria.objects.select_related("usuario")).all()
+    cuentas = cuentas.filter(Q(banco = "CA")|Q(banco = "UC")).filter(usuario__nombre__contains = nombre)
+    return render(request, "examen/banco.html", {"bancos_nombre":cuentas})
+
+
+#Obtener todos los modelos principales que tengan una media de votaciones mayor del 2,5.
+
+
+def media_puntuacion(request):
+    motos = Moto.objects.select_related("usuario", "moto")
+    resultado = ValoracionMoto.objects.aggregate(Avg("puntuacion"))
+    motos = motos.filter(puntuacion__avg__gt = 2.5)
+    return render(request, "examen/hola.html", {"media":motos})
+
+def modelos_con_media_mayor_2_5(request):
+    # Obtener todos los modelos de moto con su media de puntuación
+    modelos_moto = Moto.objects.annotate(media_puntuacion=Avg('valoracion_moto__puntuacion')).filter(media_puntuacion__gt=2.5)
+
+    return render(request, "examen/media.html", {"motos": modelos_moto})
+
+
+    
+    
+
+    

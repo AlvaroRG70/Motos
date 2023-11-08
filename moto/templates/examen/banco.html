@@ -1,0 +1,19 @@
+
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>Usuarios con el nombre </h1>
+            {% for banco in bancos_nombre%}
+            
+                <div>
+                    <h2>Nombre: {{banco.usuario.nombre}}</h2>
+                    <h2>Banco: {{banco.banco}}</h2>
+                    <p>------------------------------------------------------------------</p>
+                </div>
+            
+            {% endfor %}
+
+    </body>

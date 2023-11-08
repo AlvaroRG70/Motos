@@ -1,0 +1,20 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Motos</title>
+    </head>
+    <body>
+        <h1>usuarios sin voto</h1>
+            {% for usuario in usuario_sin%}
+            
+                <div>
+                    <h2>Nombre: {{usuario.nombre}}</h2>
+                    <p>------------------------------------------------------------------</p>
+                </div>
+            
+            {% endfor %}
+
+    </body>
+
+
+</html>

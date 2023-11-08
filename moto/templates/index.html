@@ -16,6 +16,15 @@
             <li><a href="{% url 'contieneanyo' 2000 'i' %}">Concesionarios que abrieron antes del 2000 y contienen en la descripcion la letra i</a></li>
             <li><a href="{% url 'operacionesmedia' %}">Agrupaciones</a></li>
             <li><a href="{% url 'nombre_desc' %}">Nombre dentro de descripcion</a></li>
+            <ul>
+                <h1>Examen:</h1>
+                <li><a href="{% url 'votacion_ultima' 45 %}">Último cliente en votar en la moto con id 45</a></li>
+                <li><a href="{% url '3_puntos' 1 %}">Motos con puntuacion 3 por el usuario 1 </a></li>
+                <li><a href="{% url 'usuario_sin' %}">usuarios sin voto </a></li>
+                <li><a href="{% url 'bancos_nombre' 'as'%}">Usuarios con el nombre as </a></li>
+                <li><a href="{% url 'modelos_moto' %}">Modelos de Moto con Media de Puntuación Mayor a 2.5</a></li>
+            </ul>
+            </ul>
         </ul>
             
     </body>
