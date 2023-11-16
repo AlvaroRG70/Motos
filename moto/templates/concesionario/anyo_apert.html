@@ -1,14 +1,19 @@
 {% extends "principal.html" %}
 
+{% block cabecera %}
+    <h1 class="cabecera">Concesionarios que abrieron en 2002</h1>
+{% endblock cabecera %}
+
+
 {%block contenido%}
-        <h1>Concesionarios</h1>
+    
         {% for conc in anyo_apertura %}
         
             <div>
                 <h2>Nombre: {{conc.nombre}}</h2>
                 <h2>Ubicacion: {{conc.ubicacion}}</h2>
                 <h2>Telefono: {{conc.telefono}}</h2>
-                <h2>Fecha apertura: {{conc.fecha_apertura}}</h2>
+                <h2>Fecha apertura: {{conc.fecha_apertura|date:"d-m-Y"}}</h2>
                 <h2>Descripcion: {{conc.descripcion}}</h2>
 
                 <h2>Trabajador</h2>
@@ -16,6 +21,8 @@
                     {% for trabajador in conc.trabajador_concesionario.all %}
                         <li>Nombre: {{trabajador.nombre}}</li>
                         <li>Apellidos: {{trabajador.apellidos}}</li>
+                    {%empty%}
+                        <h2>No hay trabajadores</h2>
                     {%endfor%}
                 </ul>
 

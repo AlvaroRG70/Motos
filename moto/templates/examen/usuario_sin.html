@@ -1,7 +1,12 @@
 {% extends "principal.html" %}
 
+{% block cabecera %}
+    <h1 class="cabecera">Usuarios sin voto</h1>
+{% endblock cabecera %}
+
+
 {%block contenido%}
-        <h1>usuarios sin voto</h1>
+
             {% for usuario in usuario_sin%}
             
                 <div>

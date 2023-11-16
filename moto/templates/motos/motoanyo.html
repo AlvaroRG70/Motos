@@ -1,7 +1,11 @@
 {% extends "principal.html" %}
 
+{% block cabecera %}
+    <h1 class="cabecera">Motos ordenadas por año</h1>
+{% endblock cabecera %}
+
 {%block contenido%}
-        <h1>Eventos</h1>
+
         {% for moto in moto_anyo %}
         
             <div>
@@ -15,6 +19,8 @@
                     {% for usuario in moto.usuario.all %}
                         <li>{{usuario.nombre}}</li>
                         <li>{{usuario.apellidos}}</li>
+                    {%empty%}
+                        <h2>No hay usuarios</h2>
                     {%endfor%}
                 </ul>
 

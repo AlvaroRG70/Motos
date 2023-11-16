@@ -6,6 +6,7 @@
 body{
     background-color: #EEEEEE;
     margin-top: 70px;
+    font: caption;
 }
 
 .menu {
@@ -80,7 +81,10 @@ body{
 
 
 
-
+.cabecera{
+    margin: 30px;
+    text-align: center;
+}
 
 
 

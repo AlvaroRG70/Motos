@@ -1,9 +1,13 @@
 
 {% extends "principal.html" %}
 
+{% block cabecera %}
+    <h1 class="cabecera">Usuarios con el nombre as</h1>
+{% endblock cabecera %}
+
 {%block contenido%}
-    <body>
-        <h1>Usuarios con el nombre as</h1>
+
+
             {% for banco in bancos_nombre%}
             
                 <div>

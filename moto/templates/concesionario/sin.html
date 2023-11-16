@@ -1,7 +1,12 @@
 {% extends "principal.html" %}
 
+{% block cabecera %}
+    <h1 class="cabecera">Concesionarios sin trabajador</h1>
+{% endblock cabecera %}
+
+
 {%block contenido%}
-        <h1>Concesionarios sin trabajador</h1>
+        
             {% for conc in concesionario_sin%}
             
                 <div>
@@ -9,7 +14,9 @@
                     <h2>Ubicación: {{conc.ubicacion}}</h2>
                     <p>------------------------------------------------------------------</p>
                 </div>
-            
+            {%empty%}
+                <h2>No hay concesionarios sin trabajador</h2>
+
             {% endfor %}
 
 {%endblock%}

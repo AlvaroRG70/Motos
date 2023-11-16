@@ -1,5 +1,10 @@
 {% extends "principal.html" %}
 
+{% block cabecera %}
+    <h1 class="cabecera">Eventos</h1>
+{% endblock cabecera %}
+
+
 {%block contenido%}
         <h1>Eventos</h1>
         {% for ropa in talla_m %}
@@ -13,6 +18,8 @@
                 
                 <p>------------------------------------------------------------------</p>
             </div>
+        {%empty%}
+            <h2>No hay articulos con la talla M</h2>
         
         {% endfor %}
 {%endblock%}

@@ -1,12 +1,16 @@
 {% extends "principal.html" %}
+{% block cabecera %}
+    <h1 class="cabecera">Eventos reservados con la letra a</h1>
+{% endblock cabecera %}
+
 
 {%block contenido%}
-        <h1>Eventos</h1>
+
         {% for evento in reserva_evento %}
         
             <div>
                 <h2>Nombre: {{evento.nombre}}</h2>
-                <h2>Fecha: {{evento.fecha}}</h2>
+                <h2>Fecha: {{evento.fecha|date:"d-m-Y"}}</h2>
                 <h2>Hora: {{evento.hora}}</h2>
                 <h2>descripcion: {{evento.descripcion}}</h2>
                 <h2>Usuario</h2>
