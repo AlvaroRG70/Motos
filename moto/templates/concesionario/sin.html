@@ -1,9 +1,6 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
-    <body>
+{% extends "principal.html" %}
+
+{%block contenido%}
         <h1>Concesionarios sin trabajador</h1>
             {% for conc in concesionario_sin%}
             
@@ -15,7 +12,6 @@
             
             {% endfor %}
 
-    </body>
+{%endblock%}
 
 
-</html>

@@ -1,10 +1,6 @@
+{% extends "principal.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Motos</title>
-</head>
-<body>
+{%block contenido%}
     <h1>Modelos de Moto con Media de Puntuación Mayor a 2.5</h1>
     <ul>
         {% for modelo in motos %}
@@ -14,6 +10,4 @@
             <li>Media de Puntuación: {{ modelo.media_puntuacion }}</li>
             <p>---------------------------</p>
         {% endfor %}
-    </ul>
-</body>
-</html>
+{%endblock%}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Escenario</title>
+        <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    </head>
+    <body> 
+
+        {%include "estructura/menu.html"%}
+
+        {%block contenido%}
+        {% endblock %}
+        
+        {%include "estructura/pie.html"%}
+
+    </body>
+</html>

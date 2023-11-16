@@ -1,9 +1,6 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
-    <body>
+{% extends "principal.html" %}
+
+{%block contenido%}
 
         <h1>Motos con puntuacion 3 por el usuario1</h1>
         {% for punto in 3_puntos %}
@@ -13,8 +10,4 @@
             <p>------------------------------------------------------------------</p>
 
         {% endfor %}
-
-    </body>
-
-
-</html>
+{%endblock%}

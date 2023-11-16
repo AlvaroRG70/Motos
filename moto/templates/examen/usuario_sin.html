@@ -1,9 +1,6 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
-    <body>
+{% extends "principal.html" %}
+
+{%block contenido%}
         <h1>usuarios sin voto</h1>
             {% for usuario in usuario_sin%}
             
@@ -13,8 +10,4 @@
                 </div>
             
             {% endfor %}
-
-    </body>
-
-
-</html>
+{%endblock%}

@@ -1,9 +1,6 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
-    <body>
+{% extends "principal.html" %}
+
+{%block contenido%}
         <h1>Eventos</h1>
         {% for reserv in reserv_asc %}
         
@@ -19,8 +16,4 @@
             </div>
         
         {% endfor %}
-
-    </body>
-
-
-</html>
+{%endblock%}

@@ -1,9 +1,6 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
-    <body>
+{% extends "principal.html" %}
+
+{%block contenido%}
         <h1>Motos</h1>
         {% for moto in lista_moto %}
         
@@ -24,7 +21,4 @@
         
         {% endfor %}
 
-    </body>
-
-
-</html>
+{%endblock%}

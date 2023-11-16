@@ -1,9 +1,7 @@
 
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
+{% extends "principal.html" %}
+
+{%block contenido%}
     <body>
         <h1>Usuarios con el nombre as</h1>
             {% for banco in bancos_nombre%}
@@ -16,4 +14,4 @@
             
             {% endfor %}
 
-    </body>
+{%endblock%}

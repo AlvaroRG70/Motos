@@ -1,9 +1,6 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <title>Motos</title>
-    </head>
-    <body>
+{% extends "principal.html" %}
+
+{%block contenido%}
         <h1>Concesionarios</h1>
         {% for conc in contieneanyo %}
         
@@ -20,7 +17,7 @@
         
         {% endfor %}
 
-    </body>
+{%endblock%}
 
 
 </html>
