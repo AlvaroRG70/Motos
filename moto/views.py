@@ -8,8 +8,8 @@ def index(request):
 
 def moto_unica(request,id_moto):
     motos = (Moto.objects.prefetch_related("usuario"))
-    motos = motos.filter(id = id_moto).all()
-    return render(request, "motos/mostrar_motos_desc.html", {"moto":motos})
+    motos = motos.filter(id = id_moto).first()
+    return render(request, "motos/mostrar_moto.html", {"moto":motos})
 
 #Una url que muestre todas sus motos y los datos
 
