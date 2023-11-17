@@ -6,6 +6,11 @@ from django.db.models import Q,Prefetch, Avg,Max,Min, F
 def index(request):
     return render(request, 'index.html')
 
+def moto_unica(request,id_moto):
+    motos = (Moto.objects.prefetch_related("usuario"))
+    motos = motos.filter(id = id_moto).all()
+    return render(request, "motos/mostrar_motos_desc.html", {"moto":motos})
+
 #Una url que muestre todas sus motos y los datos
 
 def lista_motos(request):

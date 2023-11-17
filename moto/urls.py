@@ -19,6 +19,7 @@ urlpatterns = [
     path("motos/puntuacion/<int:id_usuario>", views.con_3_puntos, name="3_puntos"),
     path("motos/usuario-sin-voto", views.usuario_sin_voto, name="usuario_sin"),
     path("motos/bancos/<str:nombre>", views.cuentas_bancos, name="bancos_nombre"),
-    path("motos/medias", views.modelos_con_media_mayor_2_5, name="modelos_moto")
+    path("motos/medias", views.modelos_con_media_mayor_2_5, name="modelos_moto"),
+    path("motos/moto/<int:id_moto>", views.moto_unica, name="moto")
 ]
 

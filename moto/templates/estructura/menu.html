@@ -1,6 +1,7 @@
 <div >
     <ul class="menu">
-        <li><a href="{% url 'lista_moto' %}" class="enlacemenu">Motos</a></li>
+        <li><a href="{% url 'moto' 1%}" class="enlacemenu">Moto</a></li>
+        <li><a href="{% url 'lista_moto' %}" class="enlacemenu">Motos lista</a></li>
         <li><a href="{% url 'motos_desc' 1%}" class="enlacemenu">motos descendente</a></li>
         <li><a href="{% url 'reserva_evento' 'a' %}" class="enlacemenu">Eventos a</a></li>
         <li><a href="{% url 'reserv_asc'%}" class="enlacemenu">Eventosfecha ascendente</a></li>
