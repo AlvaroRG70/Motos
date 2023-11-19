@@ -7,13 +7,9 @@
 
 {%block contenido%}
         
-            {% for conc in concesionario_sin%}
+            {% for concesionario in concesionario_sin%}
             
-                <div>
-                    <h2>Nombre: {{conc.nombre}}</h2>
-                    <h2>Ubicación: {{conc.ubicacion}}</h2>
-                    <p>------------------------------------------------------------------</p>
-                </div>
+                {% include "concesionario/concesionario.html" %}
             {%empty%}
                 <h2>No hay concesionarios sin trabajador</h2>
 

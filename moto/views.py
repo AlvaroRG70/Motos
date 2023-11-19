@@ -11,6 +11,16 @@ def moto_unica(request,id_moto):
     motos = motos.filter(id = id_moto).first()
     return render(request, "motos/mostrar_moto.html", {"moto":motos})
 
+def evento_unico(request, id_evento):
+    eventos = Evento.objects.prefetch_related("usuario")
+    eventos =  eventos.filter(id = id_evento).first()
+    return render(request, "evento/mostrar_evento.html", {"evento":eventos})
+
+def concesionario_unico(request, id_concesionario):
+    concesionarios = (Concesionario.objects.prefetch_related(Prefetch("trabajador_concesionario"))).all()
+    concesionarios = concesionarios.filter(id = id_concesionario).first()
+    return render(request, "concesionario/mostrar_concesionario.html", {"concesionario":concesionarios})
+
 #Una url que muestre todas sus motos y los datos
 
 def lista_motos(request):

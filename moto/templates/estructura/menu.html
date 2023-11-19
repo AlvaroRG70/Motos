@@ -1,16 +1,32 @@
 <div >
     <ul class="menu">
-        <li><a href="{% url 'moto' 1%}" class="enlacemenu">Moto</a></li>
-        <li><a href="{% url 'lista_moto' %}" class="enlacemenu">Motos lista</a></li>
-        <li><a href="{% url 'motos_desc' 1%}" class="enlacemenu">motos descendente</a></li>
-        <li><a href="{% url 'reserva_evento' 'a' %}" class="enlacemenu">Eventos a</a></li>
-        <li><a href="{% url 'reserv_asc'%}" class="enlacemenu">Eventosfecha ascendente</a></li>
-        <li><a href="{% url 'ult_cliente'%}" class="enlacemenu">Ultimo reservar</a></li>
+        <li><a href="../index.html" class="enlacemenu">Inicio</a></li>
+        <li><span>Motos</span>
+            <ul class="submenu">
+                <li> <a href="{% url 'moto' 1%}" class="enlacemenu">Moto</a></li>
+                <li><a href="{% url 'lista_moto' %}" class="enlacemenu">Motos lista</a></li>
+                <li><a href="{% url 'motos_desc' 1%}" class="enlacemenu">motos descendente</a></li>
+                <li><a href="{% url 'moto_anyo'%}" class="enlacemenu">Motos ordenadas</a></li>
+            </ul>
+        </li>
+        <li><span>Eventos</span>
+            <ul class="submenu">
+                <li><a href="{% url 'evento' 1 %}" class="enlacemenu">Evento</a></li>
+                <li><a href="{% url 'reserva_evento' 'a' %}" class="enlacemenu">Eventos a</a></li>
+                <li><a href="{% url 'reserv_asc'%}" class="enlacemenu">Eventosfecha ascendente</a></li>
+                <li><a href="{% url 'ult_cliente'%}" class="enlacemenu">Ultimo reservar</a></li>
+            </ul>
+        </li>
         <li><a href="{% url 'talla_m'%}" class="enlacemenu">Articulos M</a></li>
-        <li><a href="{% url 'moto_anyo'%}" class="enlacemenu">Motos ordenadas</a></li>
-        <li><a href="{% url 'concesionario_sin'%}" class="enlacemenu">Conc sin </a></li>
-        <li><a href="{% url 'anyo_apertura' 2002 %}" class="enlacemenu">Conc que abrieron 2002</a></li>
-        <li><a href="{% url 'contieneanyo' 2000 'i' %}" class="enlacemenu">Concesionarios</a></li>
+        <li><span>Concesionarios</span>
+            <ul class="submenu">
+                <li><a href="{% url 'concesionario' 1%}" class="enlacemenu">Concesionario</a></li>
+                <li><a href="{% url 'concesionario_sin'%}" class="enlacemenu">Conc sin </a></li>
+                <li><a href="{% url 'anyo_apertura' 2002 %}" class="enlacemenu">Conc que abrieron 2002</a></li>
+                <li><a href="{% url 'contieneanyo' 2000 'i' %}" class="enlacemenu">Concesionarios</a></li>
+            </ul>
+        </li>
+
         <li><a href="{% url 'operacionesmedia' %}" class="enlacemenu">Agrupaciones</a></li>
         <li><a href="{% url 'nombre_desc' %}" class="enlacemenu">Nombre de descripcion</a></li>
         <li ><span>Examen</span>

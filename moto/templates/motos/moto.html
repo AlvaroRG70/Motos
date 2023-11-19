@@ -8,6 +8,8 @@
         {% for usuario in moto.usuario.all%}
             <li>{{usuario.nombre}}</li>
             <li>{{usuario.apellidos}}</li>
+        {%empty%}
+            <h2>No hay usuarios</h2>
         {%endfor%}
     </ul>
 
