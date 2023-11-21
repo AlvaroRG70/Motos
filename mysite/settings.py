@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'django_seed',
     'moto',
+    'bootstrap5',
+    'django_bootstrap_icons'
     
 ]
 

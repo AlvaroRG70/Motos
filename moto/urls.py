@@ -22,6 +22,7 @@ urlpatterns = [
     path("motos/medias", views.modelos_con_media_mayor_2_5, name="modelos_moto"),
     path("motos/moto/<int:id_moto>", views.moto_unica, name="moto"),
     path("motos/evento/<int:id_evento>", views.evento_unico, name="evento"),
-    path("motos/concesionario/<int:id_concesionario>", views.concesionario_unico, name="concesionario")
+    path("motos/concesionario/<int:id_concesionario>", views.concesionario_unico, name="concesionario"),
+    path("formulario/moto", views.moto_create, name="formulario_moto")
 ]
 

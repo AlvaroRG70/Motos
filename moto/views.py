@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
+from moto.forms import *
 
 # Create your views here.
 def index(request):
@@ -167,6 +168,10 @@ def modelos_con_media_mayor_2_5(request):
 
 
     
-    
+#formularios
+
+def moto_create(request):
+    formulario = MotoForm()
+    return render(request,"motos/create.html", {"formulario_moto":formulario})
 
     
