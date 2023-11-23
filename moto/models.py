@@ -68,7 +68,6 @@ class Concesionario(models.Model):
     telefono = models.IntegerField(unique=True, blank=True)
     fecha_apertura = models.DateField()
     descripcion = models.TextField()
-    
     moto = models.ManyToManyField(Moto, through="VentaConcesionario")
     
 

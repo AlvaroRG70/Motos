@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
 from moto.forms import *
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -21,6 +22,10 @@ def concesionario_unico(request, id_concesionario):
     concesionarios = (Concesionario.objects.prefetch_related(Prefetch("trabajador_concesionario"))).all()
     concesionarios = concesionarios.filter(id = id_concesionario).first()
     return render(request, "concesionario/mostrar_concesionario.html", {"concesionario":concesionarios})
+
+def concesionario_lista(request):
+    concesionarios = (Concesionario.objects.prefetch_related("moto")).all()
+    return render(request, "concesionario/lista_concesionario.html", {"concesionario_lista":concesionarios})
 
 #Una url que muestre todas sus motos y los datos
 
@@ -169,7 +174,84 @@ def modelos_con_media_mayor_2_5(request):
 #formularios
 
 def moto_create(request):
-    formulario = MotoForm()
+    # Si la petición es GET se creará el formulario Vacío
+    # Si la petición es POST se creará el formulario con Datos.
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    #formulario = LibroForm(datosFormulario)
+    formulario = MotoForm(datosFormulario)
+    """formularioFactory = modelform_factory(Libro, 
+                                            fields='__all__',
+                                            widgets = {
+                                                "fecha_publicacion":forms.SelectDateWidget()
+                                            })
+    formulario = formularioFactory(datosFormulario)"""
+    
+    if (request.method == "POST"):
+        # Llamamos la función que creará el libro
+        #libro_creado = crear_libro_generico(formulario)
+        moto_creado = crear_moto_modelo(formulario)
+        if(moto_creado):
+             messages.success(request, 'Se ha creado la moto'+formulario.cleaned_data.get('nombre')+" correctamente")
+             return redirect("lista_moto")
     return render(request,"motos/create.html", {"formulario_moto":formulario})
 
+def crear_moto_modelo(formulario):
+    moto_creado = False
+    # Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            # Guarda el libro en la base de datos
+            formulario.save()
+            moto_creado = True
+        except:
+            pass
+    return moto_creado
+
+
+
+
+
+
+def concesionario_create(request):
+    # Si la petición es GET se creará el formulario Vacío
+    # Si la petición es POST se creará el formulario con Datos.
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
     
+    #formulario = LibroForm(datosFormulario)
+    formulario = ConcesionarioForm(datosFormulario)
+    """formularioFactory = modelform_factory(Libro, 
+                                            fields='__all__',
+                                            widgets = {
+                                                "fecha_publicacion":forms.SelectDateWidget()
+                                            })
+    formulario = formularioFactory(datosFormulario)"""
+    
+    if (request.method == "POST"):
+        # Llamamos la función que creará el libro
+        #libro_creado = crear_libro_generico(formulario)
+        concesionario_creado = crear_concesionario_modelo(formulario)
+        if(concesionario_creado):
+             messages.success(request, 'Se ha creado el concesionario'+formulario.cleaned_data.get('nombre')+" correctamente")
+             return redirect("concesionario_lista")
+    return render(request,"concesionario/create.html", {"formulario_concesionario":formulario})
+
+def crear_concesionario_modelo(formulario):
+    concesionario_creado = False
+    # Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            # Guarda el libro en la base de datos
+            formulario.save()
+            concesionario_creado = True
+        except:
+            pass
+    return concesionario_creado
+
+
+
+

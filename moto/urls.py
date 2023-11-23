@@ -11,6 +11,7 @@ urlpatterns = [
     path("motos/talla", views.talla_boutique, name="talla_m"),
     path("motos/anyomay", views.moto_anyos, name="moto_anyo"),
     path("motos/trabajadornulo", views.concesionario_sin, name="concesionario_sin"),
+    path("motos/concesionario_lista", views.concesionario_lista, name="lista_concesionario"),
     path("motos/concesionario_nac/<int:anyo>", views.nacidos_2018, name="anyo_apertura"),
     path("motos/concesionatio_i/<int:anyo>/<str:letra>", views.menor_2000 , name="contieneanyo"),
     path("motos/media", views.operaciones, name="operacionesmedia"),
@@ -23,6 +24,7 @@ urlpatterns = [
     path("motos/moto/<int:id_moto>", views.moto_unica, name="moto"),
     path("motos/evento/<int:id_evento>", views.evento_unico, name="evento"),
     path("motos/concesionario/<int:id_concesionario>", views.concesionario_unico, name="concesionario"),
-    path("formulario/moto", views.moto_create, name="formulario_moto")
+    path("formulario/moto", views.moto_create, name="formulario_moto"),
+    path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario")
 ]
 
