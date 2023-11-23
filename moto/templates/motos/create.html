@@ -1,11 +1,13 @@
+
+{% extends "principal.html" %}
 {% load bootstrap5 %}
 
+
+
+
+{%block contenido%}
 {% bootstrap_css %}
-
-
-
-
-<form action="" method="post">
+<form action="{% url 'formulario_moto' %}" method="POST">
 
     {% csrf_token %}
 <!--
@@ -43,3 +45,4 @@
 
 </form>
 
+{%endblock%}
