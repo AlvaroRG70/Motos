@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
-from moto.forms import *
+from moto.forms import MotoForm, ConcesionarioForm
 from django.contrib import messages
 
 # Create your views here.
@@ -216,28 +216,17 @@ def crear_moto_modelo(formulario):
 
 
 def concesionario_create(request):
-    # Si la petición es GET se creará el formulario Vacío
-    # Si la petición es POST se creará el formulario con Datos.
     datosFormulario = None
     if request.method == "POST":
         datosFormulario = request.POST
-    
-    #formulario = LibroForm(datosFormulario)
+
     formulario = ConcesionarioForm(datosFormulario)
-    """formularioFactory = modelform_factory(Libro, 
-                                            fields='__all__',
-                                            widgets = {
-                                                "fecha_publicacion":forms.SelectDateWidget()
-                                            })
-    formulario = formularioFactory(datosFormulario)"""
     
     if (request.method == "POST"):
-        # Llamamos la función que creará el libro
-        #libro_creado = crear_libro_generico(formulario)
         concesionario_creado = crear_concesionario_modelo(formulario)
         if(concesionario_creado):
              messages.success(request, 'Se ha creado el concesionario'+formulario.cleaned_data.get('nombre')+" correctamente")
-             return redirect("concesionario_lista")
+             return redirect("lista_concesionario")
     return render(request,"concesionario/create.html", {"formulario_concesionario":formulario})
 
 def crear_concesionario_modelo(formulario):

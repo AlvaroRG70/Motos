@@ -1,17 +1,12 @@
 {% extends "principal.html" %}
 {% load bootstrap5 %}
 
-
-
-
 {%block contenido%}
 {% bootstrap_css %}
 <form action="{% url 'formulario_concesionario' %}" method="POST">
 
     {% csrf_token %}
-<!--
-    {% bootstrap_form formulario_moto %}
--->
+
     <div class="mb-4">
         {% bootstrap_field formulario_concesionario.nombre %}
     </div>
