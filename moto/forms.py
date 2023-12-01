@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from moto.models import Moto, Concesionario
 from datetime import date
@@ -113,11 +114,65 @@ class ConcesionarioForm(ModelForm):
         
         
         
+class MotoBusquedaForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
         
+  
+class BusquedaAvanzadaMotoForm(forms.Form):
+    
+    nombreBusqueda = forms.CharField(required=False)
+    
+  
+    marca = forms.MultipleChoiceField(choices=Moto.MARCA,
+                                required=False,
+                                widget=forms.CheckboxSelectMultiple()
+                               )
+    
+    modelo = forms.CharField(required=False)
+    
+    anyo = forms.FloatField(required=False)
+    
+    precio = forms.FloatField(required=False)
+    
+    
+    def clean(self):
+ 
+        #Validamos con el modelo actual
+        super().clean()
         
-        
-        
-        
+        #Obtenemos los campos 
+        nombreBusqueda = self.cleaned_data.get('nombreBusqueda')
+        marca = self.cleaned_data.get('marca')
+        modelo = self.cleaned_data.get('modelo')
+        precio = self.cleaned_data.get('precio')
+           
+        #Controlamos los campos
+        #Ningún campo es obligatorio, pero al menos debe introducir un valor en alguno para buscar
+        if(nombreBusqueda == "" 
+           and len(marca) == 0
+           and modelo is None
+           and precio is None
+           ):
+            self.add_error('nombreBusqueda','Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('marca','Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('modelo','Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('precio','Debe introducir al menos un valor en un campo del formulario')
+        else:
+            #Si introduce un texto al menos que tenga  3 caracteres o más
+            if(nombreBusqueda != "" and len(nombreBusqueda) < 3):
+                self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
+            
+            #La fecha hasta debe ser mayor o igual a fecha desde. Pero sólo se valida si han introducido ambas fechas
+            
+            if (not precio is None and precio < 0):
+                self.add_error('precio','Debe ser positivo')
+                
+            if (not modelo is None and modelo < 3):
+                self.add_error('modelo','Debe tener al menos 3 caracteres')
+            
+            
+        #Siempre devolvemos el conjunto de datos.
+        return self.cleaned_data      
         
         
 

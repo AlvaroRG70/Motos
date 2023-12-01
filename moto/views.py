@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
-from moto.forms import MotoForm, ConcesionarioForm
+from moto.forms import MotoForm, ConcesionarioForm, MotoBusquedaForm, BusquedaAvanzadaMotoForm
 from django.contrib import messages
 
 # Create your views here.
@@ -173,6 +173,10 @@ def modelos_con_media_mayor_2_5(request):
     
 #formularios
 
+#CRUD
+
+#Crear moto
+
 def moto_create(request):
     # Si la petición es GET se creará el formulario Vacío
     # Si la petición es POST se creará el formulario con Datos.
@@ -198,6 +202,8 @@ def moto_create(request):
              return redirect("lista_moto")
     return render(request,"motos/create.html", {"formulario_moto":formulario})
 
+
+
 def crear_moto_modelo(formulario):
     moto_creado = False
     # Comprueba si el formulario es válido
@@ -212,9 +218,7 @@ def crear_moto_modelo(formulario):
 
 
 
-
-
-
+#Crear concesionario
 def concesionario_create(request):
     datosFormulario = None
     if request.method == "POST":
@@ -241,6 +245,79 @@ def crear_concesionario_modelo(formulario):
             pass
     return concesionario_creado
 
+#BUSCAR
+
+def moto_buscar(request):
+    
+    formulario = MotoBusquedaForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        motos = Moto.objects.prefetch_related("usuario")
+        motos = motos.filter(Q(nombre__contains=texto) | Q(modelo__contains=texto)).all()
+        mensaje_busqueda = "Se buscar por motos que contienen en su nombre o modelo la palabra: "+texto
+        return render(request, 'motos/motos_lista_busqueda.html',{"lista_moto":motos,"texto_busqueda":mensaje_busqueda})
+    
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+
+#avanzada
 
 
+def libro_buscar_avanzado(request):
+
+    if(len(request.GET) > 0):
+        formulario = BusquedaAvanzadaMotoForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "Se ha buscado por los siguientes valores:\n"
+            
+            texto = formulario.cleaned_data.get('nombreBusqueda')
+            QSmotos = Moto.objects.prefetch_related("usuario")
+            
+            #obtenemos los filtros
+            nombreBusqueda = formulario.cleaned_data.get('nombreBusqueda')
+            marcas = formulario.cleaned_data.get('marca')
+            modelo = formulario.cleaned_data.get('modelo')
+            anyo = formulario.cleaned_data.get('anyo')
+            precio = formulario.cleaned_data.get('precio')
+            
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if(nombreBusqueda != ""):
+                QSmotos = QSmotos.filter(Q(nombre__contains=texto) | Q(modelo__contains=texto))
+                mensaje_busqueda +=" Nombre o contenido que contengan la palabra "+texto+"\n"
+            
+            #Si hay idiomas, iteramos por ellos, creamos la queryOR y le aplicamos el filtro
+            if(len(marcas) > 0):
+                mensaje_busqueda +=" El idioma sea "+marcas[0]
+                filtroOR = Q(idioma=marcas[0])
+                for marca in marcas[1:]:
+                    mensaje_busqueda += " o "+marcas[1]
+                    filtroOR |= Q(marca=marca)
+                mensaje_busqueda += "\n"
+                QSmotos =  QSmotos.filter(filtroOR)
+                
+                
+            if(not modelo is None):
+                QSmotos = QSmotos.filter(nombre__contains=texto)
+                mensaje_busqueda +=" modelo  que contenga la palabra "+texto+"\n"
+            
+            if (precio >= 0):
+                QSmotos = 
+                
+            
+            
+            
+            
+            
+            libros = QSlibros.all()
+    
+            return render(request, 'libro/lista_busqueda.html',
+                            {"libros_mostrar":libros,
+                             "texto_busqueda":mensaje_busqueda})
+    else:
+        formulario = BusquedaAvanzadaLibroForm(None)
+    return render(request, 'libro/busqueda_avanzada.html',{"formulario":formulario})
 

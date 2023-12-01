@@ -32,7 +32,7 @@
 
         <li><a href="{% url 'operacionesmedia' %}" class="enlacemenu">Agrupaciones</a></li>
         <li><a href="{% url 'nombre_desc' %}" class="enlacemenu">Nombre de descripcion</a></li>
-        <li ><span>Examen</span>
+        <li><span>Examen</span>
             <ul class="submenu">
                 <li><a href="{% url 'votacion_ultima' 45 %}" class="enlacemenu">Último cliente en votar en la moto con id 45</a></li>
                 <li><a href="{% url '3_puntos' 1 %}" class="enlacemenu">Motos con puntuacion 3 por el usuario 1 </a></li>
@@ -40,6 +40,12 @@
                 <li><a href="{% url 'bancos_nombre' 'as'%}" class="enlacemenu">Usuarios con el nombre as </a></li>
                 <li><a href="{% url 'modelos_moto' %}" class="enlacemenu">Modelos de Moto con Media de Puntuación Mayor a 2.5</a></li>
             </ul>
+        </li>
+        <li>
+            <form action="{% url 'moto_buscar' %}" class="d-flex mt-3" role="search" method="GET">
+                <input name="textoBusqueda" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-light btn-outline-dark" type="submit">Search</button>
+            </form>
         </li>
             
     </ul>

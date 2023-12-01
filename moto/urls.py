@@ -25,6 +25,7 @@ urlpatterns = [
     path("motos/evento/<int:id_evento>", views.evento_unico, name="evento"),
     path("motos/concesionario/<int:id_concesionario>", views.concesionario_unico, name="concesionario"),
     path("formulario/moto", views.moto_create, name="formulario_moto"),
-    path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario")
+    path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario"),
+    path('motos/buscar',views.moto_buscar,name='moto_buscar'),
 ]
 
