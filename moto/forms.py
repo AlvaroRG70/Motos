@@ -167,7 +167,7 @@ class BusquedaAvanzadaMotoForm(forms.Form):
             if (not precio is None and precio < 0):
                 self.add_error('precio','Debe ser positivo')
                 
-            if (not modelo is None and modelo < 3):
+            if (not modelo is None and len(modelo) < 3):
                 self.add_error('modelo','Debe tener al menos 3 caracteres')
             
             

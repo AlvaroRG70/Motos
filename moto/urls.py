@@ -27,5 +27,6 @@ urlpatterns = [
     path("formulario/moto", views.moto_create, name="formulario_moto"),
     path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario"),
     path('motos/buscar',views.moto_buscar,name='moto_buscar'),
+    path('libro/buscar_avanzado/',views.moto_buscar_avanzado,name='moto_buscar_avanzado'),
 ]
 

@@ -266,7 +266,7 @@ def moto_buscar(request):
 #avanzada
 
 
-def libro_buscar_avanzado(request):
+def moto_buscar_avanzado(request):
 
     if(len(request.GET) > 0):
         formulario = BusquedaAvanzadaMotoForm(request.GET)
@@ -279,8 +279,8 @@ def libro_buscar_avanzado(request):
             
             #obtenemos los filtros
             nombreBusqueda = formulario.cleaned_data.get('nombreBusqueda')
-            marcas = formulario.cleaned_data.get('marca')
-            modelo = formulario.cleaned_data.get('modelo')
+            marcas = formulario.cleaned_data.get('marcas')
+            modelo = formulario.cleaned_data.get('modelos')
             anyo = formulario.cleaned_data.get('anyo')
             precio = formulario.cleaned_data.get('precio')
             
@@ -289,10 +289,10 @@ def libro_buscar_avanzado(request):
                 QSmotos = QSmotos.filter(Q(nombre__contains=texto) | Q(modelo__contains=texto))
                 mensaje_busqueda +=" Nombre o contenido que contengan la palabra "+texto+"\n"
             
-            #Si hay idiomas, iteramos por ellos, creamos la queryOR y le aplicamos el filtro
+            #Si hay marcas, iteramos por ellos, creamos la queryOR y le aplicamos el filtro
             if(len(marcas) > 0):
-                mensaje_busqueda +=" El idioma sea "+marcas[0]
-                filtroOR = Q(idioma=marcas[0])
+                mensaje_busqueda +=" la marca sea "+marcas[0]
+                filtroOR = Q(marcas=marcas[0])
                 for marca in marcas[1:]:
                     mensaje_busqueda += " o "+marcas[1]
                     filtroOR |= Q(marca=marca)
@@ -304,20 +304,12 @@ def libro_buscar_avanzado(request):
                 QSmotos = QSmotos.filter(nombre__contains=texto)
                 mensaje_busqueda +=" modelo  que contenga la palabra "+texto+"\n"
             
-            if (precio >= 0):
-                QSmotos = 
-                
-            
-            
-            
-            
-            
-            libros = QSlibros.all()
+            motos = QSmotos.all()
     
-            return render(request, 'libro/lista_busqueda.html',
-                            {"libros_mostrar":libros,
+            return render(request, 'moto/lista_busqueda.html',
+                            {"motos_mostrar":motos,
                              "texto_busqueda":mensaje_busqueda})
     else:
-        formulario = BusquedaAvanzadaLibroForm(None)
-    return render(request, 'libro/busqueda_avanzada.html',{"formulario":formulario})
+        formulario = BusquedaAvanzadaMotoForm(None)
+    return render(request, 'motos/busqueda_avanzada.html',{"formulario":formulario})
 
