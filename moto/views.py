@@ -313,3 +313,26 @@ def moto_buscar_avanzado(request):
         formulario = BusquedaAvanzadaMotoForm(None)
     return render(request, 'motos/busqueda_avanzada.html',{"formulario":formulario})
 
+
+
+def moto_editar(request, moto_id):
+    moto = Moto.objects.get(id = moto_id)
+    
+    datosFormulario = None
+    
+    if request.method == 'POST':
+        datosFormulario = request.POST
+        
+    formulario = MotoForm(datosFormulario, instance = moto)
+    
+    if request.method == 'POST':
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                return redirect("lista_moto")
+            except Exception as e:
+                pass
+    
+    return render(request,"motos/actualizar.html", {"formulario":formulario, 'moto':moto}) 

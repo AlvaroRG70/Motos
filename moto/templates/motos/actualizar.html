@@ -1,0 +1,40 @@
+{% extends "principal.html" %}
+{%block contenido%}
+{% bootstrap_css %}
+<form action="{% url 'moto_editar' moto.id %}" method="POST">
+
+    {% csrf_token %}
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.nombre %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.marca %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.modelo %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.año %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.precio %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.usuario %}
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario_moto.comentador %}
+    </div>
+
+    <button type="submit">Enviar</button>
+
+</form>
+
+{%endblock%}
