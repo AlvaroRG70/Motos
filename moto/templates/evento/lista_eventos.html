@@ -1,0 +1,18 @@
+{% extends "principal.html" %}
+
+{% block cabecera %}
+    <h1 class="cabecera">Eventos</h1>
+{% endblock cabecera %}
+
+{%block contenido%}
+        
+        {% for evento in lista_eventos %}
+        
+            {% include "evento/evento_solo.html" %}
+        
+        {% endfor %}
+
+{% block busqueda %}
+{% endblock %}
+
+{%endblock%}

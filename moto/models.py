@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from automatic_crud.models import BaseModel
 # Create your models here.
 
 class Usuario(models.Model):
@@ -88,13 +89,15 @@ class Trabajador(models.Model):
 
 
     
-class Evento(models.Model):
+class Evento(BaseModel):
     nombre = models.CharField(max_length=50)
     fecha = models.DateField()
     hora = models.TimeField()
     ubicacion = models.CharField(max_length=50)
     descripcion = models.TextField()
     usuario = models.ManyToManyField(Usuario, through="ReservaEvento", related_name = "reserva_evento")
+    def __str__(self):
+        return self.nombre
     
 
 class VentaMoto(models.Model):

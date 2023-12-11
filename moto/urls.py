@@ -5,6 +5,7 @@ urlpatterns = [
     path('',views.index,name = 'index'),
     path("motos/listar", views.lista_motos, name="lista_moto"),
     path("motos/anyo/<int:idus>", views.motos_desc, name="motos_desc"),
+    path("motos/eventos_lista", views.eventos_listar, name="lista_eventos"),
     path("motos/eventos/<str:texto>", views.eventos_reservados, name="reserva_evento"),
     path("motos/eventofecha", views.evento_ascendente, name="reserv_asc"),
     path("motos/ultima_reserva", views.ult_reserva , name="ult_cliente"),

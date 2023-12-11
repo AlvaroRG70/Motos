@@ -141,28 +141,26 @@ class BusquedaAvanzadaMotoForm(forms.Form):
         super().clean()
         
         #Obtenemos los campos 
-        nombreBusqueda = self.cleaned_data.get('nombreBusqueda')
+        nombre = self.cleaned_data.get('nombre')
         marca = self.cleaned_data.get('marca')
         modelo = self.cleaned_data.get('modelo')
         precio = self.cleaned_data.get('precio')
            
         #Controlamos los campos
         #Ningún campo es obligatorio, pero al menos debe introducir un valor en alguno para buscar
-        if(nombreBusqueda == "" 
+        if(nombre == "" 
            and len(marca) == 0
            and modelo is None
            and precio is None
            ):
-            self.add_error('nombreBusqueda','Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('nombre','Debe introducir al menos un valor en un campo del formulario')
             self.add_error('marca','Debe introducir al menos un valor en un campo del formulario')
             self.add_error('modelo','Debe introducir al menos un valor en un campo del formulario')
             self.add_error('precio','Debe introducir al menos un valor en un campo del formulario')
         else:
             #Si introduce un texto al menos que tenga  3 caracteres o más
-            if(nombreBusqueda != "" and len(nombreBusqueda) < 3):
+            if(nombre != "" and len(nombre) < 3):
                 self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
-            
-            #La fecha hasta debe ser mayor o igual a fecha desde. Pero sólo se valida si han introducido ambas fechas
             
             if (not precio is None and precio < 0):
                 self.add_error('precio','Debe ser positivo')

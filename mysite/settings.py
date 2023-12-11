@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django_seed',
     'moto',
     'bootstrap5',
-    'django_bootstrap_icons'
-    
+    'django_bootstrap_icons',
+    'automatic_crud',
 ]
 
 MIDDLEWARE = [

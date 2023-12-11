@@ -40,6 +40,11 @@ def motos_desc(request, idus):
     motos = motos.filter(usuario__id = idus).order_by("-año")
     return render(request, "motos/desc.html", {"motos_desc":motos})
 
+def eventos_listar(request):
+    eventos = (Moto.objects.prefetch_related("usuario")).all()
+    return render(request, "evento/lista_eventos.html", {"lista_eventos":eventos})
+    
+
 #Crear una URL que muestre todas los eventos que tengan un texto en concreto en la descripción a la hora de asignarlas a una reserva (usuario).
 
 def eventos_reservados(request,texto):
@@ -274,23 +279,22 @@ def moto_buscar_avanzado(request):
             
             mensaje_busqueda = "Se ha buscado por los siguientes valores:\n"
             
-            texto = formulario.cleaned_data.get('nombreBusqueda')
+            nombre = formulario.cleaned_data.get('nombre')
             QSmotos = Moto.objects.prefetch_related("usuario")
             
             #obtenemos los filtros
-            nombreBusqueda = formulario.cleaned_data.get('nombreBusqueda')
             marcas = formulario.cleaned_data.get('marcas')
             modelo = formulario.cleaned_data.get('modelos')
             anyo = formulario.cleaned_data.get('anyo')
             precio = formulario.cleaned_data.get('precio')
             
             #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
-            if(nombreBusqueda != ""):
-                QSmotos = QSmotos.filter(Q(nombre__contains=texto) | Q(modelo__contains=texto))
-                mensaje_busqueda +=" Nombre o contenido que contengan la palabra "+texto+"\n"
+            if(nombre != ""):
+                QSmotos = QSmotos.filter(Q(nombre__contains=nombre) | Q(modelo__contains=nombre))
+                mensaje_busqueda +=" Nombre o contenido que contengan la palabra "+nombre+"\n"
             
             #Si hay marcas, iteramos por ellos, creamos la queryOR y le aplicamos el filtro
-            if(len(marcas) > 0):
+            if(len(marcas)>0):
                 mensaje_busqueda +=" la marca sea "+marcas[0]
                 filtroOR = Q(marcas=marcas[0])
                 for marca in marcas[1:]:
@@ -301,8 +305,8 @@ def moto_buscar_avanzado(request):
                 
                 
             if(not modelo is None):
-                QSmotos = QSmotos.filter(nombre__contains=texto)
-                mensaje_busqueda +=" modelo  que contenga la palabra "+texto+"\n"
+                QSmotos = QSmotos.filter(nombre__contains=nombre)
+                mensaje_busqueda +=" modelo  que contenga la palabra "+nombre+"\n"
             
             motos = QSmotos.all()
     
