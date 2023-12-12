@@ -279,11 +279,11 @@ def moto_buscar_avanzado(request):
             
             mensaje_busqueda = "Se ha buscado por los siguientes valores:\n"
             
-            nombre = formulario.cleaned_data.get('nombre')
+            nombre = formulario.cleaned_data.get('nombreBusqueda')
             QSmotos = Moto.objects.prefetch_related("usuario")
             
             #obtenemos los filtros
-            marcas = formulario.cleaned_data.get('marcas')
+            marca = formulario.cleaned_data.get('marca')
             modelo = formulario.cleaned_data.get('modelos')
             anyo = formulario.cleaned_data.get('anyo')
             precio = formulario.cleaned_data.get('precio')
@@ -294,11 +294,11 @@ def moto_buscar_avanzado(request):
                 mensaje_busqueda +=" Nombre o contenido que contengan la palabra "+nombre+"\n"
             
             #Si hay marcas, iteramos por ellos, creamos la queryOR y le aplicamos el filtro
-            if(len(marcas)>0):
-                mensaje_busqueda +=" la marca sea "+marcas[0]
-                filtroOR = Q(marcas=marcas[0])
-                for marca in marcas[1:]:
-                    mensaje_busqueda += " o "+marcas[1]
+            if(len(marca)>0):
+                mensaje_busqueda +=" la marca sea "+marca[0]
+                filtroOR = Q(marcas=marca[0])
+                for marca in marca[1:]:
+                    mensaje_busqueda += " o "+marca[1]
                     filtroOR |= Q(marca=marca)
                 mensaje_busqueda += "\n"
                 QSmotos =  QSmotos.filter(filtroOR)
@@ -310,7 +310,7 @@ def moto_buscar_avanzado(request):
             
             motos = QSmotos.all()
     
-            return render(request, 'moto/lista_busqueda.html',
+            return render(request, 'motos/lista.html',
                             {"motos_mostrar":motos,
                              "texto_busqueda":mensaje_busqueda})
     else:

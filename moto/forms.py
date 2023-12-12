@@ -141,7 +141,7 @@ class BusquedaAvanzadaMotoForm(forms.Form):
         super().clean()
         
         #Obtenemos los campos 
-        nombre = self.cleaned_data.get('nombre')
+        nombre = self.cleaned_data.get('nombreBusqueda')
         marca = self.cleaned_data.get('marca')
         modelo = self.cleaned_data.get('modelo')
         precio = self.cleaned_data.get('precio')
@@ -165,12 +165,14 @@ class BusquedaAvanzadaMotoForm(forms.Form):
             if (not precio is None and precio < 0):
                 self.add_error('precio','Debe ser positivo')
                 
-            if (not modelo is None and len(modelo) < 3):
+            if (modelo != "" and len(modelo) < 3):
                 self.add_error('modelo','Debe tener al menos 3 caracteres')
             
             
         #Siempre devolvemos el conjunto de datos.
-        return self.cleaned_data      
+        return self.cleaned_data 
+    
+         
         
         
 
