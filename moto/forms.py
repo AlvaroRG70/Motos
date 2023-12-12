@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from moto.models import Moto, Concesionario
+from moto.models import Moto, Concesionario, Boutique, Evento
 from datetime import date
 
 
@@ -79,6 +79,58 @@ class MotoForm(ModelForm):
         return self.cleaned_data
     
   
+
+        
+        #comprobamos que no existan 2 motos con el mismo nombre
+    
+        
+        
+        
+class MotoBusquedaForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+        
+class BusquedaAvanzadaMotoForm(forms.Form):
+    textoBusqueda = forms.CharField(required=False)
+    marca = forms.MultipleChoiceField(choices=Moto.MARCA,
+                                required=False,
+                                widget=forms.CheckboxSelectMultiple()
+                               )
+    anyo = forms.IntegerField(required=False)
+    precio = forms.IntegerField(required=False)
+
+    def clean(self):
+        super().clean()
+        textoBusqueda=self.cleaned_data.get('textoBusqueda')
+        marca=self.cleaned_data.get('marca')
+        anyo=self.cleaned_data.get('anyo')
+        precio=self.cleaned_data.get('precio')
+
+        if(textoBusqueda == ""
+           and len(marca) == 0
+           and precio is None
+           and anyo is None):
+            
+            self.add_error('textoBusqueda','Debes introducir algún valor')
+            self.add_error('marca','Debes introducir algún valor')
+            self.add_error('anyo','Debes introducir algún valor')
+            self.add_error('precio','Debes introducir algún valor')
+            
+        else:
+            if (textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
+
+        return self.cleaned_data    
+    
+
+
+
+    
+    
+    
+    
+#CRUD concesionario
+
+    
 class ConcesionarioForm(ModelForm):
     class Meta:
         model = Concesionario
@@ -107,73 +159,126 @@ class ConcesionarioForm(ModelForm):
         telefono = self.cleaned_data.get("telefono")
         fecha_apertura = self.cleaned_data.get("fecha_apertura")
         descripcion = self.cleaned_data.get("descripcion")
-        moto = self.cleaned_data.get("moto")
+        moto = self.cleaned_data.get("moto")    
+    
+#CRUD ARTÍCULOS
+    
+#CREAR
+class ArticuloForm(ModelForm):
+    class Meta:
+        model = Boutique
+        fields = ['nombre', 'tipo', 'descripcion', 'precio', 'talla', 'stock']
+        labels = {
+            "nombre": ("Nombre del artículo"),
+            "tipo": ("tipo"),
+            "descripcion": ("descripcion"),
+            "precio": ("precio"),
+            "talla": ("talla"),
+            "stock": ("stock")
+        }
         
-        #comprobamos que no existan 2 motos con el mismo nombre
-    
+        help_texts = {
+            "nombre": ("50 caracteres como máximo"),
+            "modelo": ("50 caracteres como máximo"),
+        }
         
-        
-        
-class MotoBusquedaForm(forms.Form):
-    textoBusqueda = forms.CharField(required=True)
-        
-  
-class BusquedaAvanzadaMotoForm(forms.Form):
-    
-    nombreBusqueda = forms.CharField(required=False)
-    
-  
-    marca = forms.MultipleChoiceField(choices=Moto.MARCA,
-                                required=False,
-                                widget=forms.CheckboxSelectMultiple()
-                               )
-    
-    modelo = forms.CharField(required=False)
-    
-    anyo = forms.FloatField(required=False)
-    
-    precio = forms.FloatField(required=False)
-    
-    
     def clean(self):
- 
-        #Validamos con el modelo actual
         super().clean()
+        nombre = self.cleaned_data.get("nombre")
+        tipo = self.cleaned_data.get("tipo")
+        descripcion = self.cleaned_data.get("descripcion")
+        precio = self.cleaned_data.get("precio")
+        talla = self.cleaned_data.get("talla")
+        stock = self.cleaned_data.get("stock")
         
-        #Obtenemos los campos 
-        nombre = self.cleaned_data.get('nombreBusqueda')
-        marca = self.cleaned_data.get('marca')
-        modelo = self.cleaned_data.get('modelo')
-        precio = self.cleaned_data.get('precio')
-           
-        #Controlamos los campos
-        #Ningún campo es obligatorio, pero al menos debe introducir un valor en alguno para buscar
-        if(nombre == "" 
-           and len(marca) == 0
-           and modelo is None
-           and precio is None
-           ):
-            self.add_error('nombre','Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('marca','Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('modelo','Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('precio','Debe introducir al menos un valor en un campo del formulario')
-        else:
-            #Si introduce un texto al menos que tenga  3 caracteres o más
-            if(nombre != "" and len(nombre) < 3):
-                self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
+        
+        if len(nombre) < 4:
+            self.add_error("nombre", "Debe tener al menos 4 caracteres")
             
-            if (not precio is None and precio < 0):
-                self.add_error('precio','Debe ser positivo')
-                
-            if (modelo != "" and len(modelo) < 3):
-                self.add_error('modelo','Debe tener al menos 3 caracteres')
+        if len(tipo) < 4:
+            self.add_error("tipo", "Debe tener al menos 4 caracteres")
+        
+        if len(descripcion) < 10:
+            self.add_error("descripcion", "Debe contener 10 caracteres como mínimo")
             
-            
-        #Siempre devolvemos el conjunto de datos.
-        return self.cleaned_data 
+        if precio < 0:
+            self.add_error("precio", "Debe ser positivo")
+        
+        if len(talla) < 1:
+            self.add_error("talla", "Debe seleccionar una talla")
+        
+        if stock < 0:
+            self.add_error("stock", "Debe ser positivo")    
+        
+        
+        return self.cleaned_data
     
-         
+    
+
+#crud eventos
+
+class EventoForm(ModelForm):
+    class Meta:
+        model = Evento
+        fields = ['nombre', 'fecha', 'hora', 'ubicacion', 'descripcion', 'usuario']
+        labels = {
+            "nombre": ("Nombre del artículo"),
+            "fecha": ("fecha"),
+            "hora": ("hora"),
+            "ubicacion": ("ubicacion"),
+            "descripcion": ("descripcion"),
+            "usuario": ("usuario")
+        }
+        
+        help_texts = {
+            "nombre": ("50 caracteres como máximo"),
+            "usuario": ("50 caracteres como máximo"),
+        }
+        
+        widgets = {
+            "fecha":forms.SelectDateWidget()
+        }
+        localized_fields = ["fecha"]
+        
+    def clean(self):
+        super().clean()
+        nombre = self.cleaned_data.get("nombre")
+        fecha = self.cleaned_data.get("fecha")
+        hora = self.cleaned_data.get("hora")
+        ubicacion = self.cleaned_data.get("ubicacion")
+        descripcion = self.cleaned_data.get("descripcion")
+        usuario = self.cleaned_data.get("usuario")
         
         
+        if len(nombre) < 4:
+            self.add_error("nombre", "Debe tener al menos 4 caracteres")
+            
+        fechaHoy = date.today()
+        if fecha > fechaHoy:
+            self.add_error("fecha", "Debe ser igual o menor a la fecha actual")
+            
+        if len(ubicacion) < 4:
+            self.add_error("ubicacion", "Debe tener al menos 4 caracteres")
+        
+        if len(descripcion) < 10:
+            self.add_error("descripcion", "Debe contener 10 caracteres como mínimo")
+        
+        if len(usuario) < 1:
+            self.add_error("usuario", "Debe elegir al menos 1")
+    
+        
+        
+        return self.cleaned_data
+        
+        
+class BusquedaAvanzadaEventoForm(forms.Form):
+    textoBusqueda = forms.CharField(required=False)
 
+    def clean(self):
+        super().clean()
+        textoBusqueda=self.cleaned_data.get('textoBusqueda')
 
+        if(textoBusqueda == ""):
+            self.add_error('textoBusqueda','Debes introducir algún valor')
+
+        return self.cleaned_data

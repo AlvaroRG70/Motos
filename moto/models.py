@@ -3,7 +3,7 @@ from django.utils import timezone
 from automatic_crud.models import BaseModel
 # Create your models here.
 
-class Usuario(models.Model):
+class Usuario(BaseModel):
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=100)
     correo_electronico = models.CharField(max_length=100, unique=True, blank=True)
@@ -11,9 +11,10 @@ class Usuario(models.Model):
     fecha_nacimiento = models.DateField()
     fecha_registro = models.DateTimeField(default=timezone.now)
     preferencias = models.CharField(max_length=100)
-
+    def __str__(self):
+        return self.nombre
     
-class Moto(models.Model):
+class Moto(BaseModel):
     nombre = models.CharField(max_length=50)
     MARCA = [
         ("KA","Kawasaki"),
@@ -31,8 +32,10 @@ class Moto(models.Model):
     precio = models.FloatField()
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
+    def __str__(self):
+        return self.nombre
 
-class DatosTecnicosMoto(models.Model):
+class DatosTecnicosMoto(BaseModel):
     num_serie = models.IntegerField(unique=True, blank=True)
     cilindrada = models.IntegerField()
     potencia = models.IntegerField()
@@ -41,14 +44,18 @@ class DatosTecnicosMoto(models.Model):
     consumo = models.FloatField()
     sistema_frenado = models.CharField(max_length=50)
     moto = models.OneToOneField(Moto, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.nombre
 
-class AccesoriosMoto(models.Model):
+class AccesoriosMoto(BaseModel):
     nombre = models.CharField(max_length=50)
     marca = models.CharField(max_length=50)
     descripcion = models.TextField()
     precio = models.FloatField()
+    def __str__(self):
+        return self.nombre
     
-class Boutique(models.Model):
+class Boutique(BaseModel):
     nombre = models.CharField(max_length=50)
     tipo = models.CharField(max_length=50)
     descripcion = models.TextField()
@@ -62,23 +69,29 @@ class Boutique(models.Model):
     ]
     talla = models.CharField(max_length=2, choices=TALLA)
     stock = models.IntegerField(default=None)
+    def __str__(self):
+        return self.nombre
     
-class Concesionario(models.Model):
+class Concesionario(BaseModel):
     nombre = models.CharField(max_length=50)
     ubicacion = models.TextField()
     telefono = models.IntegerField(unique=True, blank=True)
     fecha_apertura = models.DateField()
     descripcion = models.TextField()
     moto = models.ManyToManyField(Moto, through="VentaConcesionario")
+    def __str__(self):
+        return self.nombre
     
 
-class Taller(models.Model):
+class Taller(BaseModel):
     nombre = models.CharField(max_length=50)
     direccion = models.CharField(max_length=50)
     telefono = models.IntegerField(unique=True, blank=True)
     concesionario = models.OneToOneField(Concesionario, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.nombre
 
-class Trabajador(models.Model):
+class Trabajador(BaseModel):
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=100)
     correo_electronico = models.CharField(max_length=100, unique=True, blank=True)
@@ -86,6 +99,8 @@ class Trabajador(models.Model):
     fecha_nacimiento = models.DateField()
     concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name = "trabajador_concesionario")
     taller = models.ForeignKey(Taller, on_delete=models.CASCADE, related_name="trabajador_taller")
+    def __str__(self):
+        return self.nombre
 
 
     
@@ -100,35 +115,43 @@ class Evento(BaseModel):
         return self.nombre
     
 
-class VentaMoto(models.Model):
+class VentaMoto(BaseModel):
     datos_compra = models.CharField(max_length=50)
     moto = models.ForeignKey(Moto, on_delete=models.CASCADE, related_name="ventamoto_moto")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="ventamoto_usuario")
+    def __str__(self):
+        return self.nombre
     
-class VentaConcesionario(models.Model):
+class VentaConcesionario(BaseModel):
     datos = models.CharField(max_length=50)
     concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name="ventaconc_concesionario")
     moto = models.ForeignKey(Moto, on_delete=models.CASCADE, related_name="ventaconc_moto")
+    def __str__(self):
+        return self.nombre
     
-class ReservaEvento(models.Model):
+class ReservaEvento(BaseModel):
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE, related_name="reservaevento_evento")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="reservaevento_usuario")
     fecha_reserva = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return self.nombre
     
     
 #creamos el modelo puntuacion
 
-class ValoracionMoto(models.Model):
+class ValoracionMoto(BaseModel):
     puntuacion = models.IntegerField(default=0)
     comentario = models.TextField()
     fecha_votacion = models.DateTimeField(default=timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="valoracion_usuario")
     moto = models.ForeignKey(Moto, on_delete=models.CASCADE, related_name="valoracion_moto")
+    def __str__(self):
+        return self.nombre
     
 
 # creamos el modelo de cuenta bancaria
 
-class CuentaBancaria(models.Model):
+class CuentaBancaria(BaseModel):
     num_cuenta = models.CharField(max_length=20, unique=True, blank=True)
     BANCO = [
         ("CA","Caixa"),

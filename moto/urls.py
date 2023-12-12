@@ -25,10 +25,18 @@ urlpatterns = [
     path("motos/moto/<int:id_moto>", views.moto_unica, name="moto"),
     path("motos/evento/<int:id_evento>", views.evento_unico, name="evento"),
     path("motos/concesionario/<int:id_concesionario>", views.concesionario_unico, name="concesionario"),
+    #crud para motos
     path("formulario/moto", views.moto_create, name="formulario_moto"),
-    path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario"),
     path('motos/buscar',views.moto_buscar,name='moto_buscar'),
-    path('libro/buscar_avanzado/',views.moto_buscar_avanzado,name='moto_buscar_avanzado'),
-    path('libro/editar/<int:moto_id>', views.moto_editar, name='moto_editar'),
+    path('moto/buscar_avanzado/',views.moto_buscar_avanzado,name='moto_buscar_avanzado'),
+    #crud para concesionarios
+    path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario"),
+    #CRUD PARA ARTICCULOS
+    path("formulario/articulo", views.artículo_create, name="formulario_articulo"),
+    #crud para eventos
+    path("formulario/evento", views.evento_create, name="formulario_evento"),
+    path("formulario/evento_busqueda", views.evento_busqueda_avanzada, name="eventos_buscar"),
+    
+    
 ]
 

@@ -9,8 +9,14 @@
         {% for moto in lista_moto %}
         
             {% include "motos/moto.html" %}
-        
+            <a href="{% url 'moto-moto-update' moto.id %}">EDITAR</a>
+            <a href="{% url 'moto-moto-logic-delete' moto.id %}">ELIMINAR</a>
+        {% empty %}
+            <p>No se encuentran motos</p>
+
+
         {% endfor %}
+
 
 {% block busqueda %}
 {% endblock %}

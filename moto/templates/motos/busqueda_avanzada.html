@@ -6,21 +6,21 @@
         {% csrf_token %}
 
         <div class="mb-4">
-            {% bootstrap_field formulario.nombreBusqueda show_label=True %}
+            {% bootstrap_field formulario.textoBusqueda show_label=True %}
         </div>
+        
         
         <div class="mb-4">
             {% bootstrap_field formulario.marca show_label=True %}
         </div>    
-        <div class="mb-4">
-            {% bootstrap_field formulario.modelo show_label=True %}
-        </div>  
+
         <div class="mb-4">
             {% bootstrap_field formulario.anyo show_label=True %}
-        </div>  
+        </div>    
+
         <div class="mb-4">
             {% bootstrap_field formulario.precio show_label=True %}
-        </div>  
+        </div> 
 
         
         {% buttons %}

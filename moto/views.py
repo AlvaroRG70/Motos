@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
-from moto.forms import MotoForm, ConcesionarioForm, MotoBusquedaForm, BusquedaAvanzadaMotoForm
+from moto.forms import * 
 from django.contrib import messages
 
 # Create your views here.
@@ -22,6 +22,7 @@ def concesionario_unico(request, id_concesionario):
     concesionarios = (Concesionario.objects.prefetch_related(Prefetch("trabajador_concesionario"))).all()
     concesionarios = concesionarios.filter(id = id_concesionario).first()
     return render(request, "concesionario/mostrar_concesionario.html", {"concesionario":concesionarios})
+
 
 def concesionario_lista(request):
     concesionarios = (Concesionario.objects.prefetch_related("moto")).all()
@@ -221,35 +222,6 @@ def crear_moto_modelo(formulario):
             pass
     return moto_creado
 
-
-
-#Crear concesionario
-def concesionario_create(request):
-    datosFormulario = None
-    if request.method == "POST":
-        datosFormulario = request.POST
-
-    formulario = ConcesionarioForm(datosFormulario)
-    
-    if (request.method == "POST"):
-        concesionario_creado = crear_concesionario_modelo(formulario)
-        if(concesionario_creado):
-             messages.success(request, 'Se ha creado el concesionario'+formulario.cleaned_data.get('nombre')+" correctamente")
-             return redirect("lista_concesionario")
-    return render(request,"concesionario/create.html", {"formulario_concesionario":formulario})
-
-def crear_concesionario_modelo(formulario):
-    concesionario_creado = False
-    # Comprueba si el formulario es válido
-    if formulario.is_valid():
-        try:
-            # Guarda el libro en la base de datos
-            formulario.save()
-            concesionario_creado = True
-        except:
-            pass
-    return concesionario_creado
-
 #BUSCAR
 
 def moto_buscar(request):
@@ -267,11 +239,55 @@ def moto_buscar(request):
         return redirect(request.META["HTTP_REFERER"])
     else:
         return redirect("index")
-
+    
 #avanzada
 
-
 def moto_buscar_avanzado(request):
+    
+    if (len(request.GET)>0):
+        formulario = BusquedaAvanzadaMotoForm(request.GET)
+        if formulario.is_valid():
+            mensaje="Se ha buscado por:\n"
+            
+            QSmotos = Moto.objects
+            
+            textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+            marca = formulario.cleaned_data.get('marca')
+            anyo = formulario.cleaned_data.get('anyo')
+            precio = formulario.cleaned_data.get('precio')
+
+            if textoBusqueda is not None:
+                QSmotos = QSmotos.filter(Q(nombre__contains=textoBusqueda) | Q(marca__contains=textoBusqueda) | Q(modelo__contains=textoBusqueda))
+                mensaje+=" Contiene: "+ textoBusqueda+"\n"
+            
+            if(len(marca)>0):
+                mensaje +=" la marca sea "+marca[0]
+                filtroOR = Q(marca=marca[0])
+                for marca in marca[1:]:
+                    mensaje += " o "+marca[1]
+                    filtroOR |= Q(marca=marca)
+                mensaje += "\n"
+                QSmotos =  QSmotos.filter(filtroOR)
+            
+            if anyo is not None:
+                QSmotos = QSmotos.filter(año__startswith=anyo)
+                mensaje+= str(anyo)+"\n"
+                
+            if precio is not None:
+                QSmotos = QSmotos.filter(precio__startswith=precio)
+                mensaje+= str(anyo)+"\n"
+                
+            
+            motos = QSmotos.all()
+            
+            return render(request,'motos/lista.html',{"lista_moto":motos, "texto":mensaje})
+    else:
+        formulario = BusquedaAvanzadaMotoForm(None)
+    return render(request,'motos/busqueda_avanzada.html',{"formulario":formulario})
+
+
+
+def moto_buscar_avanzado2(request):
 
     if(len(request.GET) > 0):
         formulario = BusquedaAvanzadaMotoForm(request.GET)
@@ -316,27 +332,108 @@ def moto_buscar_avanzado(request):
     else:
         formulario = BusquedaAvanzadaMotoForm(None)
     return render(request, 'motos/busqueda_avanzada.html',{"formulario":formulario})
+    
+    
+
+#CRUD concesionario
+def concesionario_create(request):
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
+
+    formulario = ConcesionarioForm(datosFormulario)
+    
+    if (request.method == "POST"):
+        concesionario_creado = crear_concesionario_modelo(formulario)
+        if(concesionario_creado):
+             messages.success(request, 'Se ha creado el concesionario'+formulario.cleaned_data.get('nombre')+" correctamente")
+             return redirect("lista_concesionario")
+    return render(request,"concesionario/create.html", {"formulario_concesionario":formulario})
+
+def crear_concesionario_modelo(formulario):
+    concesionario_creado = False
+    # Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            # Guarda el libro en la base de datos
+            formulario.save()
+            concesionario_creado = True
+        except:
+            pass
+    return concesionario_creado
 
 
 
-def moto_editar(request, moto_id):
-    moto = Moto.objects.get(id = moto_id)
+
+
+
+
+
+#CRUD PARA ARTICULOS
+
+#CREAR
+
+def artículo_create(request):
     
     datosFormulario = None
-    
-    if request.method == 'POST':
+    if request.method == "POST":
         datosFormulario = request.POST
         
-    formulario = MotoForm(datosFormulario, instance = moto)
-    
-    if request.method == 'POST':
-        
+    formulario = ArticuloForm(datosFormulario)
+    if (request.method == "POST"):
         if formulario.is_valid():
-            formulario.save()
             try:
+                # Guarda el libro en la base de datos
                 formulario.save()
-                return redirect("lista_moto")
-            except Exception as e:
-                pass
+                return redirect("moto-boutique-list")
+            except Exception as error:
+                print(error)
     
-    return render(request,"motos/actualizar.html", {"formulario":formulario, 'moto':moto}) 
+    return render(request, 'boutique/crear_articulos.html',{"formulario_articulo":formulario})  
+
+
+
+#CRUD PARA EVENTOS
+
+#CREAR
+
+def evento_create(request):
+    
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
+        
+    formulario = EventoForm(datosFormulario)
+    if (request.method == "POST"):
+        if formulario.is_valid():
+            try:
+                # Guarda el libro en la base de datos
+                formulario.save()
+                return redirect("moto-evento-list")
+            except Exception as error:
+                print(error)
+    
+    return render(request, 'evento/crear_eventos.html',{"formulario_evento":formulario})  
+
+
+def evento_busqueda_avanzada(request):
+
+    if (len(request.GET)>0):
+        formulario = BusquedaAvanzadaEventoForm(request.GET)
+        if formulario.is_valid():
+            mensaje="Se ha buscado por:\n"
+            
+            QSeventos = Evento.objects
+            
+            textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+
+            if textoBusqueda is not None:
+                QSeventos = QSeventos.filter(Q(nombre__contains=textoBusqueda) | Q(ubicacion__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda))
+                mensaje+=" Contiene: "+ textoBusqueda+"\n"
+            
+            eventos = QSeventos.all()
+            
+            return render(request,'evento/lista_eventos.html',{"lista_eventos":eventos, "texto":mensaje})
+    else:
+        formulario = BusquedaAvanzadaEventoForm(None)
+    return render(request,'evento/busqueda_evento.html',{"formulario":formulario})
