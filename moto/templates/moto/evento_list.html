@@ -5,12 +5,12 @@
 {% endblock cabecera %}
 
 {%block contenido%}
-
+{{texto}}
         {% if object_list %}
             {% for evento in object_list %}
 
                 {% include "evento/evento_solo.html" %}
-                <a href="{% url 'moto-evento-update' evento.id %}">EDITAR</a>
+                <a href="{% url 'formulario_editar' evento.id %}">EDITAR</a>
                 <a href="{% url 'moto-evento-logic-delete' evento.id %}">ELIMINAR</a>
              
             {% endfor %}

@@ -3,6 +3,7 @@ from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, Va
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
 from moto.forms import * 
 from django.contrib import messages
+from datetime import date
 
 # Create your views here.
 def index(request):
@@ -286,6 +287,29 @@ def moto_buscar_avanzado(request):
     return render(request,'motos/busqueda_avanzada.html',{"formulario":formulario})
 
 
+def moto_editar(request,moto_id):
+    moto = Moto.objects.get(id=moto_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    
+    formulario = MotoForm(datosFormulario,instance = moto)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado la moto'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-moto-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'motos/actualizar_moto.html',{"moto_editar":formulario,"moto":moto})
+
+
 
 #CRUD concesionario
 def concesionario_create(request):
@@ -345,8 +369,27 @@ def concesionario_busqueda_avanzada(request):
     return render(request,'concesionario/concesionario_busqueda.html',{"formulario":formulario})
 
 
-
-
+def concesionario_editar(request,concesionario_id):
+    concesionario = Concesionario.objects.get(id=concesionario_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    
+    formulario = ConcesionarioForm(datosFormulario,instance = concesionario)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado el concesionario'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-concesionario-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'concesionario/actualizar_concesionario.html',{"concesionario_editar":formulario,"concesionario":concesionario})
 
 
 #CRUD PARA ARTICULOS
@@ -416,6 +459,28 @@ def articulo_busqueda_avanzada(request):
     return render(request,'boutique/articulos_busqueda.html',{"formulario":formulario})
     
 
+def articulo_editar(request,articulo_id):
+    articulo = Boutique.objects.get(id=articulo_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    
+    formulario = ArticuloForm(datosFormulario,instance = articulo)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado el articulo'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-boutique-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'boutique/actualizar_articulo.html',{"articulo_editar":formulario,"articulo":articulo})
+
 
 #CRUD PARA EVENTOS
 
@@ -450,10 +515,13 @@ def evento_busqueda_avanzada(request):
             QSeventos = Evento.objects
             
             textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+            fecha=formulario.cleaned_data.get('fecha')
 
             if textoBusqueda is not None:
                 QSeventos = QSeventos.filter(Q(nombre__contains=textoBusqueda) | Q(ubicacion__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda))
                 mensaje+=" Contiene: "+ textoBusqueda+"\n"
+                
+            
             
             eventos = QSeventos.all()
             
@@ -461,6 +529,30 @@ def evento_busqueda_avanzada(request):
     else:
         formulario = BusquedaAvanzadaEventoForm(None)
     return render(request,'evento/busqueda_evento.html',{"formulario":formulario})
+
+
+
+def evento_editar(request,evento_id):
+    evento = Evento.objects.get(id=evento_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    
+    formulario = EventoForm(datosFormulario,instance = evento)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado el evento'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-evento-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'evento/actualizar_evento.html',{"formulario_editar":formulario,"evento":evento})
 
 
 #CRUD USUARIOS 
@@ -482,3 +574,134 @@ def usuario_create(request):
                 print(error)
     
     return render(request, 'usuario/crear_usuarios.html',{"formulario_usuario":formulario})
+
+
+def usuario_busqueda_avanzada(request):
+
+    if (len(request.GET)>0):
+        formulario = BusquedaAvanzadaUsuarioForm(request.GET)
+        if formulario.is_valid():
+            mensaje="Se ha buscado por:\n"
+            
+            QSusuarios = Usuario.objects
+            
+            textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+            fecha_nacimiento=formulario.cleaned_data.get('fecha_nacimiento')
+
+            if textoBusqueda is not None:
+                QSusuarios = QSusuarios.filter(Q(nombre__contains=textoBusqueda) | Q(apellidos__contains=textoBusqueda) | Q(correo_electronico__contains=textoBusqueda) | Q(contraseña__contains=textoBusqueda) | Q(preferencias__contains=textoBusqueda))
+                mensaje+=" Contiene: "+ textoBusqueda+"\n"
+            
+            if fecha_nacimiento is not None:
+                
+                # Filtrar por fecha de nacimiento
+                QSusuarios = QSusuarios.filter(fecha_nacimiento=fecha_nacimiento)
+                mensaje += "Fecha de nacimiento: " + str(fecha_nacimiento) + "\n"
+            
+            usuario = QSusuarios.all()
+            
+            return render(request,'moto/usuario_list.html',{"object_list":usuario, "texto":mensaje})
+    else:
+        formulario = BusquedaAvanzadaUsuarioForm(None)
+    return render(request,'usuario/busqueda_usuario.html',{"formulario":formulario})
+
+
+
+
+def usuario_editar(request,usuario_id):
+    usuario = Usuario.objects.get(id=usuario_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    
+    formulario = UsuarioForm(datosFormulario,instance = usuario)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado el usuario'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-usuario-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'usuario/actualizar_usuario.html',{"usuario_editar":formulario,"usuario":usuario})
+
+
+
+#CRUD TRABAJADOR
+
+
+def trabajador_create(request):
+    
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
+        
+    formulario = TrabajadorForm(datosFormulario)
+    if (request.method == "POST"):
+        if formulario.is_valid():
+            try:
+                # Guarda el libro en la base de datos
+                formulario.save()
+                return redirect("moto-trabajador-list")
+            except Exception as error:
+                print(error)
+    
+    return render(request, 'trabajador/crear_trabajadores.html',{"formulario_trabajador":formulario})
+
+
+def trabajador_busqueda_avanzada(request):
+
+    if (len(request.GET)>0):
+            formulario = BusquedaAvanzadaTrabajadorForm(request.GET)
+            if formulario.is_valid():
+                mensaje="Se ha buscado por:\n"
+                
+                QStrabajador = Trabajador.objects.select_related("concesionario", "taller")
+                
+                textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+                fecha_nacimiento=formulario.cleaned_data.get('fecha_nacimiento')
+
+                if textoBusqueda is not None:
+                    QStrabajador = QStrabajador.filter(Q(nombre__contains=textoBusqueda) | Q(apellidos__contains=textoBusqueda) | Q(correo_electronico__contains=textoBusqueda) | Q(contraseña__contains=textoBusqueda))
+                    mensaje+=" Contiene: "+ textoBusqueda+"\n"
+                
+                if fecha_nacimiento is not None:
+                    # Filtrar por fecha de nacimiento
+                    QStrabajador = QStrabajador.filter(fecha_nacimiento=fecha_nacimiento)
+                    mensaje += "Fecha de nacimiento: " + str(fecha_nacimiento) + "\n"
+                
+                trabajador = QStrabajador.all()
+                
+                return render(request,'moto/trabajador_list.html',{"object_list":trabajador, "texto":mensaje})
+    else:
+        formulario = BusquedaAvanzadaTrabajadorForm(None)
+    return render(request,'trabajador/busqueda_trabajador.html',{"formulario":formulario})
+
+
+
+
+def trabajador_editar(request,trabajador_id):
+    trabajador = Trabajador.objects.get(id=trabajador_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    formulario = TrabajadorForm(datosFormulario,instance = trabajador)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado el usuario'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-trabajador-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'trabajador/actualizar_trabajador.html',{"trabajador_editar":formulario,"trabajador":trabajador})

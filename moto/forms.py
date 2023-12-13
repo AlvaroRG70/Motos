@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from moto.models import Moto, Concesionario, Boutique, Evento, Usuario
+from moto.models import Moto, Concesionario, Boutique, Evento, Usuario, Trabajador
 from datetime import date
 
 
@@ -148,8 +148,6 @@ class ConcesionarioForm(ModelForm):
             "nombre": ("50 caracteres como máximo"),
             "telefono": ("9 caracteres"),
         }
-    
-
         
         
     def clean(self):
@@ -160,6 +158,28 @@ class ConcesionarioForm(ModelForm):
         fecha_apertura = self.cleaned_data.get("fecha_apertura")
         descripcion = self.cleaned_data.get("descripcion")
         moto = self.cleaned_data.get("moto")    
+    
+        if len(nombre) < 4:
+            self.add_error("nombre", "Debe tener al menos 4 caracteres")
+            
+        if len(ubicacion) < 10:
+            self.add_error("ubicacion", "Debe tener al menos 10 caracteres")
+            
+            
+        if len(descripcion) < 10:
+            self.add_error("descripcion", "Debe tener al menos 10 caracteres")
+        
+        if len(str(telefono)) < 9 and len(str(telefono)) > 9:
+            self.add_error("descripcion", "Debe contener 9 caracteres")
+
+        if len(moto) < 1:
+            self.add_error("moto", "Debe seleccionar 2 moto")
+        
+        
+      
+        
+        
+        return self.cleaned_data
     
 
 class BusquedaAvanzadaConcesionarioForm(forms.Form):
@@ -181,8 +201,8 @@ class BusquedaAvanzadaConcesionarioForm(forms.Form):
             if (textoBusqueda != "" and len(textoBusqueda) < 3):
                 self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
 
-            if (not telefono is None and telefono != 9):
-                self.add_error('telefono','Debe tener 9 caracteres')
+            if (not telefono is None and len(str(telefono)) != 9):
+                self.add_error('telefono','Debe tener 9 digitos')
 
         return self.cleaned_data
     
@@ -299,7 +319,7 @@ class EventoForm(ModelForm):
         }
         
         widgets = {
-            "fecha":forms.SelectDateWidget()
+            "fecha":forms.SelectDateWidget(years=range(1950, 2030))
         }
         localized_fields = ["fecha"]
         
@@ -336,10 +356,11 @@ class EventoForm(ModelForm):
         
 class BusquedaAvanzadaEventoForm(forms.Form):
     textoBusqueda = forms.CharField(required=False)
-
+   
     def clean(self):
         super().clean()
         textoBusqueda=self.cleaned_data.get('textoBusqueda')
+       
 
         if(textoBusqueda == ""):
             self.add_error('textoBusqueda','Debes introducir algún valor')
@@ -369,8 +390,8 @@ class UsuarioForm(ModelForm):
         }
         
         widgets = {
-            "fecha_nacimiento":forms.SelectDateWidget(),
-            "fecha_registro":forms.SelectDateWidget()
+            "fecha_nacimiento":forms.SelectDateWidget(years=range(1950, 2030)),
+            "fecha_registro":forms.SelectDateWidget(years=range(1950, 2030))
         }
         
         localized_fields = ["fecha_nacimiento", "fecha_registro"]
@@ -409,4 +430,122 @@ class UsuarioForm(ModelForm):
             self.add_error("preferencias", "Debe contener 10 caracteres como mínimo")
     
          
+        return self.cleaned_data
+    
+    
+
+class BusquedaAvanzadaUsuarioForm(forms.Form):
+    textoBusqueda = forms.CharField(required=False)
+    fecha_nacimiento = forms.DateField(label='fecha_nacimiento', widget= forms.SelectDateWidget(years=range(1900,2023))
+                                )
+
+    def clean(self):
+        super().clean()
+        textoBusqueda=self.cleaned_data.get('textoBusqueda')
+        fecha_nacimiento=self.cleaned_data.get('fecha_nacimiento')
+
+        if(textoBusqueda == ""
+           and fecha_nacimiento is None):
+            
+            self.add_error('textoBusqueda','Debes introducir algún valor')
+            self.add_error('fecha_nacimiento','Debes introducir algún valor')
+            
+        else:
+            
+            if (textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
+            
+            fechaHoy = date.today()
+            if not fecha_nacimiento is None and fecha_nacimiento > fechaHoy:
+                 self.add_error('fecha_nacimiento','Debe ser menor que la fecha actual')
+
+        return self.cleaned_data
+    
+
+#CRUD TRABAJADOR
+
+class TrabajadorForm(ModelForm):
+    class Meta:
+        model = Trabajador
+        fields = ['nombre', 'apellidos', 'correo_electronico', 'contraseña', 'fecha_nacimiento', 'concesionario', 'taller']
+        labels = {
+            "nombre": ("Nombre del artículo"),
+            "apellidos": ("apellidos"),
+            "correo_electronico": ("correo_electronico"),
+            "contraseña": ("contraseña"),
+            "fecha_nacimiento": ("fecha_nacimiento"),
+            "concesionario": ("concesionario"),
+            "taller": ("taller")
+        }
+        
+        help_texts = {
+            "nombre": ("50 caracteres como máximo"),
+            "apellidos": ("50 caracteres como máximo"),
+        }
+        
+        widgets = {
+            "fecha_nacimiento":forms.SelectDateWidget(years=range(1950, 2030))
+        }
+        localized_fields = ["fecha_nacimiento"]
+        
+    def clean(self):
+        super().clean()
+        nombre = self.cleaned_data.get("nombre")
+        apellidos = self.cleaned_data.get("apellidos")
+        correo_electronico = self.cleaned_data.get("correo_electronico")
+        contraseña = self.cleaned_data.get("contraseña")
+        fecha_nacimiento = self.cleaned_data.get("fecha_nacimiento")
+        concesionario = self.cleaned_data.get("concesionario")
+        taller = self.cleaned_data.get("taller")
+        
+        
+        if len(nombre) < 3:
+            self.add_error("nombre", "Debe tener al menos 3 caracteres")
+            
+        if len(apellidos) < 3:
+            self.add_error("apellidos", "Debe tener al menos 3 caracteres")
+            
+        if len(correo_electronico) < 5:
+            self.add_error("correo_electronico", "Debe tener al menos 5 caracteres")
+            
+        if len(contraseña) < 7:
+            self.add_error("contraseña", "Debe tener al menos 7 caracteres")
+            
+        fechaHoy = date.today()
+        if fecha_nacimiento > fechaHoy:
+            self.add_error("fecha_nacimiento", "Debe ser igual o menor a la fecha actual")
+            
+        
+        
+        return self.cleaned_data
+
+
+class BusquedaAvanzadaTrabajadorForm(forms.Form):
+    
+    textoBusqueda = forms.CharField(required=False)
+    fecha_nacimiento = forms.DateField(label='fecha_nacimiento', 
+                        widget= forms.SelectDateWidget(years=range(1900,2023))
+                        )
+
+    def clean(self):
+        super().clean()
+        textoBusqueda=self.cleaned_data.get('textoBusqueda')
+        fecha_nacimiento=self.cleaned_data.get('fecha_nacimiento')
+    
+        if(textoBusqueda == ""
+            and fecha_nacimiento is None):
+            
+            self.add_error('textoBusqueda','Debes introducir algún valor')
+            self.add_error('fecha_nacimiento','Debes introducir algún valor')
+            
+        else:
+            if (textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
+            
+            
+            fechaHoy = date.today()
+            if not fecha_nacimiento is None and fecha_nacimiento > fechaHoy:
+                 self.add_error('fecha_nacimiento','Debe ser menor que la fecha actual')
+                
+
         return self.cleaned_data
