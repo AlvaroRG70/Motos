@@ -31,11 +31,15 @@ urlpatterns = [
     path('moto/buscar_avanzado/',views.moto_buscar_avanzado,name='moto_buscar_avanzado'),
     #crud para concesionarios
     path("formulario/concesionario", views.concesionario_create, name="formulario_concesionario"),
+    path("formulario/concesionario_busqueda", views.concesionario_busqueda_avanzada, name="concesionarios_buscar"),
     #CRUD PARA ARTICCULOS
     path("formulario/articulo", views.artículo_create, name="formulario_articulo"),
+    path("formulario/articulo_busqueda", views.articulo_busqueda_avanzada, name="articulos_buscar"),
     #crud para eventos
     path("formulario/evento", views.evento_create, name="formulario_evento"),
     path("formulario/evento_busqueda", views.evento_busqueda_avanzada, name="eventos_buscar"),
+    #crud para usuarios
+    path("formulario/usuario", views.usuario_create, name="formulario_usuario"),
     
     
 ]

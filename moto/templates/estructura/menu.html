@@ -29,6 +29,7 @@
                 <li><a href="{% url 'talla_m'%}" class="enlacemenu">Articulos M</a></li>
                 <li><a href="{% url 'moto-boutique-list' %}" class="enlacemenu">Lista de artículos</a></li>
                 <li><a href="{% url 'formulario_articulo' %}" class="enlacemenu">Crear Artículos</a></li>
+                <li><a href="{% url 'articulos_buscar' %}" class="enlacemenu">Busqueda avanzada Artículos</a></li>
                 
             </ul>
         </li>
@@ -40,6 +41,15 @@
                 <li><a href="{% url 'contieneanyo' 2000 'i' %}" class="enlacemenu">Concesionarios</a></li>
                 <li><a href="{% url 'lista_concesionario'%}" class="enlacemenu">Lista de Concesionarios</a></li>
                 <li><a href="{% url 'formulario_concesionario'%}" class="enlacemenu">Crear concesionario</a></li>
+                <li><a href="{% url 'moto-concesionario-list'%}" class="enlacemenu">Lista concesionarios</a></li>
+                <li><a href="{% url 'concesionarios_buscar'%}" class="enlacemenu">Busqueda avanzada concesionario</a></li>
+            </ul>
+        </li>
+
+        <li><span>Usuarios</span>
+            <ul class="submenu">
+                <li><a href="{% url 'moto-usuario-list' %}" class="enlacemenu">Lista de usuarios</a></li>
+                <li><a href="{% url 'formulario_usuario'%}" class="enlacemenu">Crear Usuario</a></li>
             </ul>
         </li>
 

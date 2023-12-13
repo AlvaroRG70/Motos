@@ -7,7 +7,7 @@
 {%block contenido%}
         
 
-        {% for evento in lista_eventos %}
+        {% for evento in object_list %}
         
             {% include "evento/evento_solo.html" %}
             <a href="{% url 'moto-evento-update' evento.id %}">EDITAR</a>
