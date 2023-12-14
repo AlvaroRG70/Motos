@@ -3,7 +3,7 @@ from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, Va
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
 from moto.forms import * 
 from django.contrib import messages
-from datetime import date
+from datetime import datetime
 
 # Create your views here.
 def index(request):
@@ -705,3 +705,89 @@ def trabajador_editar(request,trabajador_id):
             except Exception as error:
                 print(error)
     return render(request, 'trabajador/actualizar_trabajador.html',{"trabajador_editar":formulario,"trabajador":trabajador})
+
+
+#CRUD PROMOCIONES
+
+#CREATE
+
+def promocion_create(request):
+    
+    datosFormulario = None
+    if request.method == "POST":
+        datosFormulario = request.POST
+        
+    formulario = PromocionForm(datosFormulario)
+    if (request.method == "POST"):
+        if formulario.is_valid():
+            try:
+                # Guarda el libro en la base de datos
+                formulario.save()
+                return redirect("moto-promocion-list")
+            except Exception as error:
+                print(error)
+    
+    return render(request, 'promocion/crear_promociones.html',{"formulario_promocion":formulario})
+
+
+#BUSCAR
+
+def promocion_busqueda_avanzada(request):
+
+    if (len(request.GET)>0):
+            formulario = BusquedaAvanzadaPromocionForm(request.GET)
+            if formulario.is_valid():
+                mensaje="Se ha buscado por:\n"
+                
+                QSpromocion = Promocion.objects.prefetch_related("usuario")
+                
+                textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+                fechaDesde = formulario.cleaned_data.get('fecha_desde')
+                fechaHasta = formulario.cleaned_data.get('fecha_hasta')
+                descuento_minimo = formulario.cleaned_data.get('descuento_minimo')
+
+                if textoBusqueda is not None:
+                    QSpromocion = QSpromocion.filter(Q(nombre__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda))
+                    mensaje+=" Contiene: "+ textoBusqueda+"\n"
+                
+                if(not fechaDesde is None):
+                    mensaje +=" La fecha sea mayor a "+datetime.strftime(fechaDesde,'%d-%m-%Y')+"\n"
+                    QSpromocion = QSpromocion.filter(fecha_fin__gte=fechaDesde)
+            
+                if(not fechaHasta is None):
+                    mensaje +=" La fecha sea menor a "+datetime.strftime(fechaHasta,'%d-%m-%Y')+"\n"
+                    QSpromocion = QSpromocion.filter(fecha_fin__lte=fechaHasta)
+                
+                if (not descuento_minimo is None):
+                    QSpromocion = QSpromocion.filter(descuento__gte=descuento_minimo)
+                
+                promocion = QSpromocion.all()
+                
+                return render(request,'moto/promocion_list.html',{"object_list":promocion, "texto":mensaje})
+    else:
+        formulario = BusquedaAvanzadaPromocionForm(None)
+    return render(request,'promocion/busqueda_promocion.html',{"formulario":formulario})
+
+
+#EDITAR
+
+def promocion_editar(request,promocion_id):
+    promocion = Promocion.objects.get(id=promocion_id)
+    
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    formulario = PromocionForm(datosFormulario,instance = promocion)
+    
+    if (request.method == "POST"):
+       
+        if formulario.is_valid():
+            try:  
+                formulario.save()
+                messages.success(request, 'Se ha editado la promocion'+formulario.cleaned_data.get('nombre')+" correctamente")
+                return redirect('moto-promocion-list')  
+            except Exception as error:
+                print(error)
+    return render(request, 'promocion/actualizar_promocion.html',{"promocion_editar":formulario,"promocion":promocion})

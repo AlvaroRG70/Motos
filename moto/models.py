@@ -161,3 +161,17 @@ class CuentaBancaria(BaseModel):
     ]
     banco = models.CharField(max_length=2, choices=BANCO)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="cuenta_usuario")
+
+
+
+#examen formularios
+
+class Promocion(BaseModel):
+    
+    nombre = models.CharField(max_length=20, unique=True, blank=True)
+    descripcion = models.TextField()
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    descuento = models.IntegerField()
+    fecha_fin = models.DateField()
+    def __str__(self):
+        return self.nombre

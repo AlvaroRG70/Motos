@@ -73,6 +73,14 @@
                 <li><a href="{% url 'modelos_moto' %}" class="enlacemenu">Modelos de Moto con Media de Puntuación Mayor a 2.5</a></li>
             </ul>
         </li>
+
+        <li><span>Promocion Examen</span>
+            <ul class="submenu">
+                <li><a href="{% url 'moto-promocion-list' %}" class="enlacemenu">Lista Promociones</a></li>
+                <li><a href="{% url 'formulario_promocion' %}" class="enlacemenu">Crear Promociones</a></li>
+                <li><a href="{% url 'promocion_buscar' %}" class="enlacemenu">Busqueda Avanzada Promociones</a></li>
+            </ul>
+        </li>
         <li>
             <form action="{% url 'moto_buscar' %}" class="d-flex mt-3" role="search" method="GET">
                 <input name="textoBusqueda" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

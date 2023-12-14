@@ -50,5 +50,10 @@ urlpatterns = [
     path("formulario/trabajador", views.trabajador_create, name="formulario_trabajador"),
     path("formulario/trabajador_busqueda", views.trabajador_busqueda_avanzada, name="trabajador_buscar"),
     path('formulario/trabajador_editar/<int:trabajador_id>',views.trabajador_editar,name='trabajador_editar'),
+    #CRUD EXAMEN
+    path("formulario/promocion", views.promocion_create, name="formulario_promocion"),
+    path("formulario/promocion_busqueda", views.promocion_busqueda_avanzada, name="promocion_buscar"),
+    path('formulario/promocion_editar/<int:promocion_id>',views.promocion_editar,name='promocion_editar'),
+
 ]
 

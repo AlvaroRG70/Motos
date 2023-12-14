@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from moto.models import Moto, Concesionario, Boutique, Evento, Usuario, Trabajador
+from moto.models import Moto, Concesionario, Boutique, Evento, Usuario, Trabajador, Promocion
 from datetime import date
-
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -546,6 +546,116 @@ class BusquedaAvanzadaTrabajadorForm(forms.Form):
             fechaHoy = date.today()
             if not fecha_nacimiento is None and fecha_nacimiento > fechaHoy:
                  self.add_error('fecha_nacimiento','Debe ser menor que la fecha actual')
+                
+
+        return self.cleaned_data
+    
+    
+    #CRUD EXAMEN
+    
+    #CREATE
+    
+class PromocionForm(ModelForm):
+    class Meta:
+        model = Promocion
+        fields = ['nombre', 'descripcion', 'descuento', 'usuario', 'fecha_fin']
+        labels = {
+            "nombre": ("Nombre de la promocion"),
+            "descripcion": ("Descripción de la promoción"),
+            "descuento": ("Descuento que se le aplica"),
+            "usuario": ("Usuario al que se le aplica la promoción"),
+            "fecha_fin": ("Fecha fin promocion"),
+        }
+        
+        help_texts = {
+            "descripcion": ("100 caracteres como mínimo"),
+            "nombre": ("el nombre tiene que ser único"),
+            "fecha_fin": ("Esta fecha no puede inferior a la fecha actual"),
+            "descripcion": ("100 caracteres como mínimo"),
+            "descuento": ("valor entre 0 y 100"),
+        }
+        
+        widgets = {
+            "fecha_fin":forms.SelectDateWidget(years=range(2023, 2090))
+        }
+        localized_fields = ["fecha_fin"]
+        
+        
+    def clean(self):
+        super().clean()
+        nombre = self.cleaned_data.get("nombre")
+        descripcion = self.cleaned_data.get("descripcion")
+        descuento = self.cleaned_data.get("descuento")
+        usuario = self.cleaned_data.get("usuario")
+        fecha_fin = self.cleaned_data.get("fecha_fin")
+        
+        promocionNombre = Promocion.objects.filter(nombre=nombre).first()
+        try:
+            if(not promocionNombre is None):
+                self.add_error('nombre','Ya existe una promocion con ese nombre')
+        except ObjectDoesNotExist:
+            pass
+        
+        
+        if len(descripcion) < 100:
+            self.add_error("descripcion", "Debe contener 100 caracteres como mínimo")
+        
+        if descuento < 0 or descuento > 100 :
+            self.add_error("descuento", "Debe comprender un rango entre 0 y 100") 
+               
+        fechaHoy = date.today()
+        if fecha_fin < fechaHoy:
+            self.add_error("fecha_fin", "Debe ser mayor a la fecha actual")
+        
+        return self.cleaned_data
+    
+    
+#BUSQUEDA
+
+class BusquedaAvanzadaPromocionForm(forms.Form):
+    textoBusqueda = forms.CharField(required=False)
+    descuento = forms.IntegerField(required=False)
+    fecha_desde = forms.DateField(label="fecha_desde",
+                                required=False,
+                                widget= forms.SelectDateWidget(years=range(2023,209))
+                                )
+    
+    fecha_hasta = forms.DateField(label="fecha_hasta",
+                                  required=False,
+                                  widget= forms.SelectDateWidget(years=range(2023,209))
+                                  )
+
+  
+
+    def clean(self):
+        super().clean()
+        textoBusqueda=self.cleaned_data.get('textoBusqueda')
+        descuento= self.cleaned_data.get('descuento')
+        fecha_desde = self.cleaned_data.get('fecha_desde')
+        fecha_hasta = self.cleaned_data.get('fecha_hasta')
+        usuarios = self.cleaned_data.get('usuarios')
+        
+
+        if(textoBusqueda == ""
+           and fecha_desde is None
+           and fecha_hasta is None
+           and descuento is None
+           and len(usuarios) == 0
+           ):
+            
+            self.add_error('textoBusqueda','Debes introducir algún valor')
+            self.add_error('fecha_desde','Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_hasta','Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('usuarios','Debe introducir al menos un valor en un campo del formulario')
+            
+        else:
+            
+            if (textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda','Debe introducir al menos 3 caracteres')
+            
+            if(not fecha_desde is None  and not fecha_hasta is None and fecha_hasta < fecha_desde):
+                self.add_error('fecha_desde','La fecha hasta no puede ser menor que la fecha desde')
+                self.add_error('fecha_hasta','La fecha hasta no puede ser menor que la fecha desde')
                 
 
         return self.cleaned_data
