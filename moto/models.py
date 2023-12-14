@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from automatic_crud.models import BaseModel
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class Usuario(BaseModel):
@@ -13,6 +14,25 @@ class Usuario(BaseModel):
     preferencias = models.CharField(max_length=100)
     def __str__(self):
         return self.nombre
+    
+#class UsuarioLogin(AbstractUser):
+#    ADMINISTRADOR = 1
+ #   CLIENTE = 2
+  #  BIBLIOTECARIO = 3
+   #ROLES = (
+  #      (ADMINISTRADOR, 'administardor'),
+  #     (CLIENTE, 'cliente'),
+   #     (BIBLIOTECARIO, 'bibliotecario'),
+  #  )
+    
+  #  rol  = models.PositiveSmallIntegerField(
+  #      choices=ROLES,default=1
+  #  )
+    
+#class cliente(models.Model):
+    #usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='cliente_rel', unique=True)
+
+
     
 class Moto(BaseModel):
     nombre = models.CharField(max_length=50)
@@ -30,6 +50,7 @@ class Moto(BaseModel):
     modelo = models.CharField(max_length=50)
     año = models.IntegerField()
     precio = models.FloatField()
+
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
     def __str__(self):
@@ -97,8 +118,10 @@ class Trabajador(BaseModel):
     correo_electronico = models.CharField(max_length=100, unique=True, blank=True)
     contraseña = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField()
-    concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name = "trabajador_concesionario")
+    concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name="trabajador_concesionario")
     taller = models.ForeignKey(Taller, on_delete=models.CASCADE, related_name="trabajador_taller")
+    #usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='trabajador_rel', unique=True)
+
     def __str__(self):
         return self.nombre
 
