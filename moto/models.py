@@ -1,7 +1,20 @@
 from django.db import models
 from django.utils import timezone
-from automatic_crud.models import BaseModel
 from django.contrib.auth.models import AbstractUser
+class UsuarioLogin(AbstractUser):
+    ADMINISTRADOR = 1
+    CLIENTE = 2
+    ROLES = (
+        (ADMINISTRADOR, 'administardor'),
+        (CLIENTE, 'cliente'),
+    )
+    
+    rol  = models.PositiveSmallIntegerField(
+        choices=ROLES,default=1
+    )
+    
+
+from automatic_crud.models import BaseModel
 # Create your models here.
 
 class Usuario(BaseModel):
@@ -15,22 +28,9 @@ class Usuario(BaseModel):
     def __str__(self):
         return self.nombre
     
-#class UsuarioLogin(AbstractUser):
-#    ADMINISTRADOR = 1
- #   CLIENTE = 2
-  #  BIBLIOTECARIO = 3
-   #ROLES = (
-  #      (ADMINISTRADOR, 'administardor'),
-  #     (CLIENTE, 'cliente'),
-   #     (BIBLIOTECARIO, 'bibliotecario'),
-  #  )
     
-  #  rol  = models.PositiveSmallIntegerField(
-  #      choices=ROLES,default=1
-  #  )
-    
-#class cliente(models.Model):
-    #usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='cliente_rel', unique=True)
+class cliente(models.Model):
+    usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='cliente_rel', unique=True)
 
 
     
@@ -120,7 +120,7 @@ class Trabajador(BaseModel):
     fecha_nacimiento = models.DateField()
     concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name="trabajador_concesionario")
     taller = models.ForeignKey(Taller, on_delete=models.CASCADE, related_name="trabajador_taller")
-    #usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='trabajador_rel', unique=True)
+    usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='trabajador_rel', unique=True)
 
     def __str__(self):
         return self.nombre

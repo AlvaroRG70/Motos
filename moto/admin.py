@@ -8,6 +8,7 @@ from .models import Boutique
 from .models import Concesionario
 from .models import Taller
 from .models import Evento
+from .models import UsuarioLogin
 
 from .models import VentaMoto
 from .models import VentaConcesionario
@@ -34,5 +35,6 @@ admin.site.register(ReservaEvento)
 admin.site.register(ValoracionMoto)
 admin.site.register(CuentaBancaria)
 admin.site.register(Promocion)
+admin.site.register(UsuarioLogin)
 
 
