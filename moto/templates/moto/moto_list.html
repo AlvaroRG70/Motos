@@ -11,7 +11,10 @@
             {% for moto in object_list %}
                 
                 {% include "motos/moto.html" %}
-                <a href="{% url 'moto_editar' moto.id %}">EDITAR</a>
+                {% if perms.biblioteca.add_moto %}
+                    <a href="{% url 'moto_editar' moto.id %}">EDITAR</a>
+                {%endif%}
+                {% if perms.biblioteca.delete_moto %}
                 <a href="{% url 'moto-moto-logic-delete' moto.id %}">ELIMINAR</a>
             
             {% endfor %}

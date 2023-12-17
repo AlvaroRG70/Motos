@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import ModelForm
-from moto.models import Moto, Concesionario, Boutique, Evento, Usuario, Trabajador, Promocion
+from moto.models import Moto, Concesionario, Boutique, Evento, Usuario, Trabajador, Promocion, UsuarioLogin, Prestamo
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.forms import UserCreationForm
 
 
 
@@ -659,3 +660,21 @@ class BusquedaAvanzadaPromocionForm(forms.Form):
                 
 
         return self.cleaned_data
+
+
+#LOGIN
+
+class RegistroForm(UserCreationForm): 
+    roles = (                   
+                                (UsuarioLogin.TRABAJADOR, 'trabajador'),
+                                (UsuarioLogin.CLIENTE, 'cliente'),
+            )   
+    rol = forms.ChoiceField(choices=roles)  
+    class Meta:
+        model = UsuarioLogin
+        fields = ('username', 'email', 'password1', 'password2','rol')
+        
+class PrestamoForm(ModelForm):
+    class Meta:
+        model = Prestamo
+        fields = ('moto','cliente')

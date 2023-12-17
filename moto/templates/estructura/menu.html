@@ -7,7 +7,9 @@
                 <li><a href="{% url 'lista_moto' %}" class="enlacemenu">Motos lista</a></li>
                 <li><a href="{% url 'motos_desc' 1%}" class="enlacemenu">motos descendente</a></li>
                 <li><a href="{% url 'moto_anyo'%}" class="enlacemenu">Motos ordenadas</a></li>
-                <li><a href="{% url 'formulario_moto'%}" class="enlacemenu">Crear Moto</a></li>
+                {% if perms.biblioteca.add_moto %}
+                    <li><a href="{% url 'formulario_moto'%}" class="enlacemenu">Crear Moto</a></li>
+                {%endif%}
                 <li><a class="enlacemenu" href="{% url 'moto_buscar_avanzado' %}">Busqueda Avanzada de Moto</a></li>
                 <li><a href="{% url 'moto-moto-list'%}" class="enlacemenu">Lista Motos Auto</a></li>
             </ul>
@@ -92,6 +94,34 @@
                 <input name="textoBusqueda" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-light btn-outline-dark" type="submit">Search</button>
             </form>
+        </li>
+        <li>
+            {% if request.user.is_authenticated %}
+                <p class="enlacemenu">
+                    Nombre Usuario: {{ request.user }}
+                </p>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.user.is_authenticated %}
+                <a class="enlacemenu" href="{% url 'logout' %}">
+                    Desconectarse
+                </a>
+            {% endif %}
+        </li>
+        <li>
+            {% if not request.user.is_authenticated %}
+                <a class="enlacemenu" href="{% url 'login' %}">
+                    Login
+                </a>
+            {% endif %}
+        </li>
+        <li>
+            {% if not request.user.is_authenticated %}
+                <a class="enlacemenu" href="{% url 'registrar_usuario' %}">
+                    Registrarse
+                </a>
+            {% endif %}
         </li>
             
     </ul>

@@ -1,11 +1,12 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
 class UsuarioLogin(AbstractUser):
-    ADMINISTRADOR = 1
+    TRABAJADOR = 1
     CLIENTE = 2
     ROLES = (
-        (ADMINISTRADOR, 'administardor'),
+        (TRABAJADOR, 'trabajador'),
         (CLIENTE, 'cliente'),
     )
     
@@ -112,6 +113,9 @@ class Taller(BaseModel):
     def __str__(self):
         return self.nombre
 
+class TrabajadorLogin(BaseModel):
+    usuario = models.OneToOneField(UsuarioLogin, on_delete = models.CASCADE)
+
 class Trabajador(BaseModel):
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=100)
@@ -120,7 +124,8 @@ class Trabajador(BaseModel):
     fecha_nacimiento = models.DateField()
     concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name="trabajador_concesionario")
     taller = models.ForeignKey(Taller, on_delete=models.CASCADE, related_name="trabajador_taller")
-    usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='trabajador_rel', unique=True)
+    usuario = models.OneToOneField(UsuarioLogin, on_delete = models.CASCADE)
+
 
     def __str__(self):
         return self.nombre
@@ -198,3 +203,9 @@ class Promocion(BaseModel):
     fecha_fin = models.DateField()
     def __str__(self):
         return self.nombre
+
+
+class Prestamo(models.Model):
+    cliente = models.ForeignKey(cliente, on_delete=models.CASCADE)
+    moto = models.ForeignKey(Moto, on_delete=models.CASCADE)
+    fecha_prestamo = models.DateTimeField(default=timezone.now,blank=True)

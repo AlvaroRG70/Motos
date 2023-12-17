@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
-from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria
+from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria, TrabajadorLogin
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
 from moto.forms import * 
 from django.contrib import messages
 from datetime import datetime
+from django.contrib.auth.models import Group
+from django.contrib.auth import login
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 def index(request):
@@ -187,7 +190,7 @@ def modelos_con_media_mayor_2_5(request):
 #CRUD
 
 #Crear moto
-
+@permission_required('moto.add_moto')
 def moto_create(request):
     # Si la petición es GET se creará el formulario Vacío
     # Si la petición es POST se creará el formulario con Datos.
@@ -290,7 +293,7 @@ def moto_buscar_avanzado(request):
         formulario = BusquedaAvanzadaMotoForm(None)
     return render(request,'motos/busqueda_avanzada.html',{"formulario":formulario})
 
-
+@permission_required('moto.change_moto')
 def moto_editar(request,moto_id):
     moto = Moto.objects.get(id=moto_id)
     
@@ -795,3 +798,30 @@ def promocion_editar(request,promocion_id):
             except Exception as error:
                 print(error)
     return render(request, 'promocion/actualizar_promocion.html',{"promocion_editar":formulario,"promocion":promocion})
+
+
+#LOGIN
+
+def registrar_usuario(request):
+    if request.method == 'POST':
+        formulario = RegistroForm(request.POST)
+        if formulario.is_valid():
+            user = formulario.save()
+            rol = int(formulario.cleaned_data.get('rol'))
+            if(rol == UsuarioLogin.CLIENTE):
+                grupo = Group.objects.get(name='Clientes') 
+                grupo.user_set.add(user)
+                cliente = Cliente.objects.create( usuario = user)
+                cliente.save()
+            elif(rol == UsuarioLogin.TRABAJADOR):
+                grupo = Group.objects.get(name='Trabajadores') 
+                grupo.user_set.add(user)
+                trabajadores = TrabajadorLogin.objects.create(usuario = user)
+                trabajadores.save()
+            
+            login(request, user)
+            return redirect('index')
+    else:
+        formulario = RegistroForm()
+    return render(request, 'registration/signup.html', {'formulario': formulario})
+
