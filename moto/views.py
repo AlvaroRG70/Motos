@@ -319,6 +319,7 @@ def moto_editar(request,moto_id):
 
 
 #CRUD concesionario
+@permission_required('moto.add_concesionario')
 def concesionario_create(request):
     datosFormulario = None
     if request.method == "POST":
@@ -375,7 +376,7 @@ def concesionario_busqueda_avanzada(request):
         formulario = BusquedaAvanzadaConcesionarioForm(None)
     return render(request,'concesionario/concesionario_busqueda.html',{"formulario":formulario})
 
-
+@permission_required('moto.change_concesionario')
 def concesionario_editar(request,concesionario_id):
     concesionario = Concesionario.objects.get(id=concesionario_id)
     
@@ -402,7 +403,7 @@ def concesionario_editar(request,concesionario_id):
 #CRUD PARA ARTICULOS
 
 #CREAR
-
+@permission_required('moto.add_boutique')
 def artículo_create(request):
     
     datosFormulario = None
@@ -465,7 +466,7 @@ def articulo_busqueda_avanzada(request):
         formulario = BusquedaAvanzadaArticuloForm(None)
     return render(request,'boutique/articulos_busqueda.html',{"formulario":formulario})
     
-
+@permission_required('moto.change_boutique')
 def articulo_editar(request,articulo_id):
     articulo = Boutique.objects.get(id=articulo_id)
     
@@ -493,6 +494,7 @@ def articulo_editar(request,articulo_id):
 
 #CREAR
 
+@permission_required('moto.add_evento')
 def evento_create(request):
     
     datosFormulario = None
@@ -538,7 +540,7 @@ def evento_busqueda_avanzada(request):
     return render(request,'evento/busqueda_evento.html',{"formulario":formulario})
 
 
-
+@permission_required('moto.change_evento')
 def evento_editar(request,evento_id):
     evento = Evento.objects.get(id=evento_id)
     
@@ -563,7 +565,7 @@ def evento_editar(request,evento_id):
 
 
 #CRUD USUARIOS 
-
+@permission_required('moto.add_usuario')
 def usuario_create(request):
     
     datosFormulario = None
@@ -614,7 +616,7 @@ def usuario_busqueda_avanzada(request):
 
 
 
-
+@permission_required('moto.change_usuario')
 def usuario_editar(request,usuario_id):
     usuario = Usuario.objects.get(id=usuario_id)
     
@@ -641,7 +643,7 @@ def usuario_editar(request,usuario_id):
 
 #CRUD TRABAJADOR
 
-
+@permission_required('moto.add_trabajador')
 def trabajador_create(request):
     
     datosFormulario = None
@@ -691,7 +693,7 @@ def trabajador_busqueda_avanzada(request):
 
 
 
-
+@permission_required('moto.change_trabajador')
 def trabajador_editar(request,trabajador_id):
     trabajador = Trabajador.objects.get(id=trabajador_id)
     
