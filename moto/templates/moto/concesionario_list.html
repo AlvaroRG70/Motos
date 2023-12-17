@@ -10,8 +10,12 @@
             {% for concesionario in object_list %}
 
                 {% include "concesionario/concesionario.html" %}
+                {% if perms.moto.change_concesionario %}
                 <a href="{% url 'concesionario_editar' concesionario.id %}">EDITAR</a>
+                {%endif%}
+                {% if perms.moto.delete_concesionario %}
                 <a href="{% url 'moto-concesionario-logic-delete' concesionario.id %}">ELIMINAR</a>
+                {%endif%}
              
             {% endfor %}
         {% else %}

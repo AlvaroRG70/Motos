@@ -10,8 +10,13 @@
         {% for usuario in object_list %}
 
             {% include "usuario/usuario.html" %}
+            {% if perms.moto.change_usuario %}
             <a href="{% url 'usuario_editar' usuario.id %}">EDITAR</a>
+            {%endif%}
+            {% if perms.moto.delete_usuario %}
             <a href="{% url 'moto-usuario-logic-delete' usuario.id %}">ELIMINAR</a>
+            {%endif%}
+
             
         {% endfor %}
     {% else %}

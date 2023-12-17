@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria, TrabajadorLogin
+from moto.models import Moto, Evento, ReservaEvento, Boutique, Concesionario, ValoracionMoto, Usuario, CuentaBancaria, TrabajadorLogin, cliente
 from django.db.models import Q,Prefetch, Avg,Max,Min, F
 from moto.forms import * 
 from django.contrib import messages
@@ -811,8 +811,8 @@ def registrar_usuario(request):
             if(rol == UsuarioLogin.CLIENTE):
                 grupo = Group.objects.get(name='Clientes') 
                 grupo.user_set.add(user)
-                cliente = Cliente.objects.create( usuario = user)
-                cliente.save()
+                clientes = cliente.objects.create( usuario = user)
+                clientes.save()
             elif(rol == UsuarioLogin.TRABAJADOR):
                 grupo = Group.objects.get(name='Trabajadores') 
                 grupo.user_set.add(user)

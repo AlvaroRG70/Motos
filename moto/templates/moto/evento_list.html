@@ -10,8 +10,12 @@
             {% for evento in object_list %}
 
                 {% include "evento/evento_solo.html" %}
+                {% if perms.moto.change_evento %}
                 <a href="{% url 'formulario_editar' evento.id %}">EDITAR</a>
+                {%endif%}
+                {% if perms.moto.delete_evento %}
                 <a href="{% url 'moto-evento-logic-delete' evento.id %}">ELIMINAR</a>
+                {%endif%}
              
             {% endfor %}
         {% else %}

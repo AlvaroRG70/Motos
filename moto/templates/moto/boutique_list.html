@@ -11,8 +11,12 @@
             {% for boutique in object_list %}
 
                 {% include "boutique/butique_solo.html" %}
+                {% if perms.moto.change_boutique %}
                 <a href="{% url 'articulo_editar' boutique.id %}">EDITAR</a>
+                {%endif%}
+                {% if perms.moto.delete_boutique %}
                 <a href="{% url 'moto-boutique-logic-delete' boutique.id %}">ELIMINAR</a>
+                {%endif%}
              
             {% endfor %}
         {% else %}
