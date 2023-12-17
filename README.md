@@ -166,5 +166,9 @@ LOGIN
 
 Puedes registrarte, conectarte y desconectarte  
 
-usuario trabajador --> usuario: AlvaroRodr | contraseña: ordenador4 --> Puede crear y eliminar 
-usuario cliente --> usuario: JorgeProfesor | contraseña: ordenador4 --> No puede crear y eliminar 
+usuario trabajador --> usuario: AlvaroRodr | contraseña: ordenador4 --> Puede crear, editar y eliminar 
+usuario cliente --> usuario: JorgeProfesor2 | contraseña: ordenador4 --> No puede crear, editar y eliminar 
+
+
+!!!!IMPORTANTE¡¡¡¡¡
+
