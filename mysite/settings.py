@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',
     'moto',
     'automatic_crud',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

@@ -22,6 +22,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('accounts/', include('django.contrib.auth.urls')),
     path("", include("moto.urls")),
+    path('api/v1/', include('moto.api_urls')),
     path('automatic-crud/', include('automatic_crud.urls'))
     
 ]
