@@ -8,5 +8,5 @@ from .forms import *
 def moto_list(request):
     
     motos = Moto.objects.all()
-    serializer = UsuarioSerializer(motos, many=True)
+    serializer = UsuarioSeializerMejorado(motos, many=True)
     return Response(serializer.data)
