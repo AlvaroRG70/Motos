@@ -23,7 +23,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path("", include("moto.urls")),
     path('api/v1/', include('moto.api_urls')),
-    path('automatic-crud/', include('automatic_crud.urls'))
+    #path('api/v2/', include('moto.api_urls_v2')),
+    path('automatic-crud/', include('automatic_crud.urls')),
+    #permisos de api
+    path('oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider'))
     
 ]
 

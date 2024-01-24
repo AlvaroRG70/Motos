@@ -57,6 +57,8 @@ urlpatterns = [
     
     #login
     path('registrar',views.registrar_usuario,name='registrar_usuario'),
+    
+    
 
 ]
 
