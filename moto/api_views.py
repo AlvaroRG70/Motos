@@ -1,12 +1,15 @@
 from .models import *
 from .serializers import *
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from .forms import *
-from django.db.models import Q,Prefetch, Avg,Max,Min, F
+from django.db.models import Q,Prefetch, Avg,Max,Min,F
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def moto_list(request):
     
     motos = Moto.objects.all()
@@ -14,7 +17,7 @@ def moto_list(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def concesionario_list(request):
+def concesionario_list(request):    
     
     conc = Concesionario.objects.all()
     serializer = ConcesionarioSeializerMejorado(conc, many=True)

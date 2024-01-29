@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import handler404, handler400, handler403, handler500
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +27,9 @@ urlpatterns = [
     #path('api/v2/', include('moto.api_urls_v2')),
     path('automatic-crud/', include('automatic_crud.urls')),
     #permisos de api
-    path('oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider'))
+    path('oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
 ]
 
@@ -34,3 +37,4 @@ handler404 = "moto.views.mi_error_404"
 handler400 = "moto.views.mi_error_400"
 handler403 = "moto.views.mi_error_403"
 handler500 = "moto.views.mi_error_500"
+
