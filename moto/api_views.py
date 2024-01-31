@@ -93,3 +93,66 @@ def moto_buscar_avanzado_api(request):
                 return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+@api_view(['GET'])
+def concesionario_busqueda_avanzada_api(request):
+
+    if (len(request.query_params)>0):
+        formulario = BusquedaAvanzadaConcesionarioForm(request.GET)
+        if formulario.is_valid():
+            mensaje="Se ha buscado por:\n"
+            
+            QSconcesionario = Concesionario.objects
+            
+            textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+            telefono=formulario.cleaned_data.get('telefono')
+
+            if textoBusqueda is not None:
+                QSconcesionario = QSconcesionario.filter(Q(nombre__contains=textoBusqueda) | Q(ubicacion__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda))
+                mensaje+=" Contiene: "+ textoBusqueda+"\n"
+            
+            if telefono is not None:
+                QSconcesionario = QSconcesionario.filter(telefono__startswith=telefono)
+                mensaje+= str(telefono)+"\n"
+            
+            concesionario = QSconcesionario.all()
+            
+            serializer = ConcesionarioSeializerMejorado(concesionario, many=True)
+            
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+#eventos
+
+@api_view(['GET'])
+def evento_busqueda_avanzada_api(request):
+
+    if (len(request.query_params)>0):
+        formulario = BusquedaAvanzadaEventoForm(request.GET)
+        if formulario.is_valid():
+            mensaje="Se ha buscado por:\n"
+            
+            QSevento = Evento.objects
+            
+            textoBusqueda=formulario.cleaned_data.get('textoBusqueda')
+
+            if textoBusqueda is not None:
+                QSevento = QSevento.filter(Q(nombre__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda)| Q(ubicacion__contains=textoBusqueda) )
+                mensaje+=" Contiene: "+ textoBusqueda+"\n"
+            
+            evento = QSevento.all()
+            
+            serializer = EventoSeializerMejorado(evento, many=True)
+            
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
