@@ -31,6 +31,13 @@ def evento_list(request):
     serializer = EventoSeializerMejorado(eventos, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def usuario_list(request):
+    
+    usuarios = Usuario.objects.all()
+    serializer = UsuarioRealSerializer(usuarios, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def moto_buscar_api(request):
@@ -155,4 +162,39 @@ def evento_busqueda_avanzada_api(request):
             return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+# motos
+
+@api_view(['POST'])
+def moto_create(request):  
+    serializers = MotoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Moto CREADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET']) 
+def moto_obtener(request,moto_id):
+    moto = Moto.objects.prefetch_related("usuario")
+    moto = moto.get(id=moto_id)
+    serializer = UsuarioSeializerMejorado(moto)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def moto_editar(request,moto_id):
+    moto = Moto.objects.get(id=moto_id)
+    serializers = UsuarioSeializerMejorado(data=request.data,instance=libro)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Moto EDITADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
