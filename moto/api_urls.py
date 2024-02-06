@@ -3,6 +3,7 @@ from .api_views import *
 
 urlpatterns = [
     path('motos', moto_list),
+    path('motos/<int:moto_id>', moto_obtener),
     path('conc', concesionario_list),
     path('eventos', evento_list),
     path('usuarios', usuario_list),
@@ -12,4 +13,7 @@ urlpatterns = [
     path('evento/busqueda_avanzada', evento_busqueda_avanzada_api),
     path('motos/crear',moto_create),
     path('motos/editar/<int:moto_id>',moto_editar),
+    path('concesionario/crear',concesionario_create),
+    
+    
 ]

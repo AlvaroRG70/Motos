@@ -187,8 +187,9 @@ def moto_obtener(request,moto_id):
 
 @api_view(['PUT'])
 def moto_editar(request,moto_id):
+    print(Response.json())
     moto = Moto.objects.get(id=moto_id)
-    serializers = UsuarioSeializerMejorado(data=request.data,instance=libro)
+    serializers = UsuarioSeializerMejorado(data=request.data,instance=moto)
     if serializers.is_valid():
         try:
             serializers.save()
@@ -198,3 +199,16 @@ def moto_editar(request,moto_id):
     else:
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(['POST'])
+def concesionario_create(request):  
+    serializers = ConcesionarioSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Concesionario CREADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
