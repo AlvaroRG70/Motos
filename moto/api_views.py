@@ -187,9 +187,22 @@ def moto_obtener(request,moto_id):
 
 @api_view(['PUT'])
 def moto_editar(request,moto_id):
-    print(Response.json())
     moto = Moto.objects.get(id=moto_id)
     serializers = UsuarioSeializerMejorado(data=request.data,instance=moto)
+    if serializers.is_valid():
+        try:    
+            serializers.save()
+            return Response("Moto EDITADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PATCH'])
+def moto_actualizar_nombre(request,moto_id):
+    serializers = MotoSerializerCreate(data=request.data)
+    moto = Moto.objects.get(id=moto_id)
+    serializers = MotoSerializerActualizarNombre(data=request.data,instance=moto)
     if serializers.is_valid():
         try:
             serializers.save()
@@ -198,6 +211,16 @@ def moto_editar(request,moto_id):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['DELETE'])
+def moto_eliminar(request,moto_id):
+    moto = Moto.objects.get(id=moto_id)
+    try:
+        moto.delete()
+        return Response("Moto ELIMINADO")
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 
@@ -212,3 +235,61 @@ def concesionario_create(request):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET']) 
+def concesionario_obtener(request,concesionario_id):
+    concesionario = Concesionario.objects.all()
+    concesionario = concesionario.get(id=concesionario_id)
+    serializer = ConcesionarioSeializerMejorado(concesionario)
+    return Response(serializer.data)
+    
+    
+@api_view(['PUT'])
+def concesionario_editar(request,concesionario_id):
+    print(Response.json())
+    concesionario = Concesionario.objects.get(id=concesionario_id)
+    serializers = ConcesionarioSeializerMejorado(data=request.data,instance=concesionario)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Concesionario EDITADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+
+@api_view(['DELETE'])
+def concesionario_eliminar(request,concesionario_id):
+    concesionario = Concesionario.objects.get(id=concesionario_id)
+    try:
+        concesionario.delete()
+        return Response("Concesionario ELIMINADO")
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    
+
+@api_view(['POST'])
+def evento_create(request):  
+    serializers = EventoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Evento CREADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['DELETE'])
+def evento_eliminar(request,evento_id):
+    evento = Evento.objects.get(id=evento_id)
+    try:
+        evento.delete()
+        return Response("Evento ELIMINADO")
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    

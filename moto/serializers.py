@@ -32,7 +32,7 @@ class ConcesionarioSeializerMejorado(serializers.ModelSerializer):
 
     class Meta:
         model = Concesionario
-        fields = ('nombre', 'ubicacion', 'telefono', 'fecha_apertura', 'descripcion', 'moto')
+        fields = ('id','nombre', 'ubicacion', 'telefono', 'fecha_apertura', 'descripcion', 'moto')
         
 
 #serializer evento
@@ -42,7 +42,7 @@ class EventoSeializerMejorado(serializers.ModelSerializer):
 
     class Meta:
         model = Evento
-        fields = ('nombre', 'fecha', 'hora', 'ubicacion', 'descripcion', 'usuario')
+        fields = ('id','nombre', 'fecha', 'hora', 'ubicacion', 'descripcion', 'usuario')
         
         
 #create
@@ -80,6 +80,18 @@ class MotoSerializerCreate(serializers.ModelSerializer):
         if len(usuario) < 1:
             raise serializers.ValidationError('Debe seleccionar al menos un usuario')
         return usuario
+    
+class MotoSerializerActualizarNombre(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = Moto
+        fields = ['nombre']
+    
+    def validate_nombre(self,nombre):
+        motoNombre = Moto.objects.filter(nombre=nombre).first()
+        if(not motoNombre is None and motoNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe una moto con ese nombre')
+        return nombre
 
 
 class ConcesionarioSerializerCreate(serializers.ModelSerializer):
@@ -126,6 +138,42 @@ class ConcesionarioSerializerCreate(serializers.ModelSerializer):
         if len(moto) < 1:
             raise serializers.ValidationError('Debe seleccionar al menos un moto')
         return moto
+    
+
+class EventoSerializerCreate(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = Evento
+        fields = ['nombre','fecha','hora',
+                  'ubicacion','descripcion','usuario']
+    
+    def validate_nombre(self,nombre):
+        EventoNombre = Evento.objects.filter(nombre=nombre).first()
+        if(not EventoNombre is None
+           ):
+             if(not self.instance is None and EventoNombre.id == self.instance.id):
+                 pass
+             else:
+                raise serializers.ValidationError('Ya existe un evento con ese nombre')
+        
+        return nombre
+    
+    def validate_ubicacion(self,ubicacion):
+        if len(ubicacion) < 10:
+             raise serializers.ValidationError('Al menos debes indicar 10 caracteres')
+        return ubicacion
+
+
+    def validate_descripcion(self,descripcion):
+        if len(descripcion) < 10:
+             raise serializers.ValidationError('Al menos debes indicar 10 caracteres')
+        return descripcion
+    
+    
+    def validate_usuario(self,usuario):
+        if len(usuario) < 1:
+            raise serializers.ValidationError('Debe seleccionar al menos un usuario')
+        return usuario
 
     
     
