@@ -28,7 +28,6 @@ class UsuarioSeializerMejorado(serializers.ModelSerializer):
 #serializer concesionario
 class ConcesionarioSeializerMejorado(serializers.ModelSerializer):
     moto = UsuarioSerializer(read_only=True, many=True)
-    fecha_apertura = serializers.DateField(format='get_marca_display')
 
     class Meta:
         model = Concesionario
@@ -38,7 +37,6 @@ class ConcesionarioSeializerMejorado(serializers.ModelSerializer):
 #serializer evento
 class EventoSeializerMejorado(serializers.ModelSerializer):
     usuario = UsuarioRealSerializer(read_only=True, many=True)
-    fecha = serializers.DateField(format='get_marca_display')
 
     class Meta:
         model = Evento
@@ -139,6 +137,17 @@ class ConcesionarioSerializerCreate(serializers.ModelSerializer):
             raise serializers.ValidationError('Debe seleccionar al menos un moto')
         return moto
     
+class ConcesionarioSerializerActualizarNombre(serializers.ModelSerializer):
+    class Meta:
+        model = Concesionario
+        fields = ['nombre']
+    
+    def validate_nombre(self,nombre):
+        concNombre = Concesionario.objects.filter(nombre=nombre).first()
+        if(not concNombre is None and concNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe un concesionario con ese nombre')
+        return nombre
+
 
 class EventoSerializerCreate(serializers.ModelSerializer):
  

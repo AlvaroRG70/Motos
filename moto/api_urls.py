@@ -20,13 +20,13 @@ urlpatterns = [
     path('concesionario/<int:concesionario_id>', concesionario_obtener),
     path('concesionario/crear',concesionario_create),
     path('concesionario/editar/<int:concesionario_id>',concesionario_editar),
+    path('concesionario/editar/nombre/<int:concesionario_id>',concesionario_actualizar_nombre),
     path('concesionario/eliminar/<int:concesionario_id>',concesionario_eliminar),
     
+    path('evento/<int:evento_id>', evento_obtener),
     path('evento/crear',evento_create),
+    path('evento/editar/<int:evento_id>',evento_editar),
     path('evento/eliminar/<int:evento_id>',evento_eliminar),
-    
-    
-    
     
     
 ]

@@ -246,7 +246,6 @@ def concesionario_obtener(request,concesionario_id):
     
 @api_view(['PUT'])
 def concesionario_editar(request,concesionario_id):
-    print(Response.json())
     concesionario = Concesionario.objects.get(id=concesionario_id)
     serializers = ConcesionarioSeializerMejorado(data=request.data,instance=concesionario)
     if serializers.is_valid():
@@ -257,7 +256,22 @@ def concesionario_editar(request,concesionario_id):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+@api_view(['PATCH'])
+def concesionario_actualizar_nombre(request,concesionario_id):
+    serializers = ConcesionarioSerializerCreate(data=request.data)
+    concesionario = Concesionario.objects.get(id=concesionario_id)
+    serializers = ConcesionarioSerializerActualizarNombre(data=request.data,instance=concesionario)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Concesionario EDITADO")
+        except Exception as error:
+            print("Error 500:"+repr(error))
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)    
+
     
     
 
@@ -271,6 +285,13 @@ def concesionario_eliminar(request,concesionario_id):
         return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     
+@api_view(['GET']) 
+def evento_obtener(request,evento_id):
+    evento = Evento.objects.all()
+    evento = evento.get(id=evento_id)
+    serializer = ConcesionarioSeializerMejorado(evento)
+    return Response(serializer.data)
+
 
 @api_view(['POST'])
 def evento_create(request):  
@@ -283,6 +304,20 @@ def evento_create(request):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def evento_editar(request,evento_id):
+    evento = Evento.objects.get(id=evento_id)
+    serializers = EventoSeializerMejorado(data=request.data,instance=evento)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("evento EDITADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 @api_view(['DELETE'])
 def evento_eliminar(request,evento_id):
