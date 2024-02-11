@@ -1,7 +1,12 @@
 from django.urls import path
 from .api_views import *
 
+
 urlpatterns = [
+    
+    path('upload-file/', FileUploadAPIView.as_view()),
+    
+    
     path('motos', moto_list),
     path('motos/<int:moto_id>', moto_obtener),
     path('conc', concesionario_list),
@@ -26,6 +31,7 @@ urlpatterns = [
     path('evento/<int:evento_id>', evento_obtener),
     path('evento/crear',evento_create),
     path('evento/editar/<int:evento_id>',evento_editar),
+    path('evento/editar/nombre/<int:evento_id>',evento_actualizar_nombre),
     path('evento/eliminar/<int:evento_id>',evento_eliminar),
     
     

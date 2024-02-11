@@ -18,6 +18,14 @@ class UsuarioLogin(AbstractUser):
 from automatic_crud.models import BaseModel
 # Create your models here.
 
+
+class UploadedFile(models.Model):
+    file = models.FileField()
+    uploaded_on = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.uploaded_on.date()
+
 class Usuario(BaseModel):
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=100)
@@ -31,10 +39,9 @@ class Usuario(BaseModel):
     
     
 class cliente(models.Model):
-    usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='cliente_rel', unique=True)
+    usuario = models.OneToOneField(UsuarioLogin, on_delete=models.CASCADE, related_name='cliente_rel', unique=True)  
 
 
-    
 class Moto(BaseModel):
     nombre = models.CharField(max_length=50)
     MARCA = [
@@ -54,6 +61,7 @@ class Moto(BaseModel):
 
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
+    
     def __str__(self):
         return self.nombre
 
@@ -209,3 +217,5 @@ class Prestamo(models.Model):
     cliente = models.ForeignKey(cliente, on_delete=models.CASCADE)
     moto = models.ForeignKey(Moto, on_delete=models.CASCADE)
     fecha_prestamo = models.DateTimeField(default=timezone.now,blank=True)
+    
+

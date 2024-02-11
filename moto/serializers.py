@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import *
 from datetime import date
 
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedFile
+        fields = ('file', 'uploaded_on',)
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,11 +125,11 @@ class ConcesionarioSerializerCreate(serializers.ModelSerializer):
              raise serializers.ValidationError('debes indicar 9 caracteres')
         return telefono
     
-    #def validar_fecha_apertura(self, fecha_apertura):
-     #   fechaHoy = date.today()
-      #  if fecha_apertura >= fechaHoy:
-       #     raise serializers.ValidationError('La fecha de apertura debe ser anterior a la fecha actual.')
-        #return fecha_apertura
+    def validar_fecha_apertura(self, fecha_apertura):
+        fechaHoy = date.today()
+        if fecha_apertura >= fechaHoy:
+            raise serializers.ValidationError('La fecha de apertura debe ser anterior a la fecha actual.')
+        return fecha_apertura
 
     def validate_descripcion(self,descripcion):
         if len(descripcion) < 10:
@@ -184,6 +189,17 @@ class EventoSerializerCreate(serializers.ModelSerializer):
             raise serializers.ValidationError('Debe seleccionar al menos un usuario')
         return usuario
 
+
+class EventoSerializerActualizarNombre(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
+        fields = ['nombre']
+    
+    def validate_nombre(self,nombre):
+        eventoNombre = Evento.objects.filter(nombre=nombre).first()
+        if(not eventoNombre is None and eventoNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe un evento con ese nombre')
+        return nombre
     
     
     

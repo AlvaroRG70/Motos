@@ -6,7 +6,32 @@ from rest_framework import status
 from .forms import *
 from django.db.models import Q,Prefetch, Avg,Max,Min,F
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.views import APIView
+
+
+
+class FileUploadAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = FileUploadSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            # you can access the file like this from serializer
+            # uploaded_file = serializer.validated_data["file"]
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
 
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
@@ -273,7 +298,6 @@ def concesionario_actualizar_nombre(request,concesionario_id):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)    
 
     
-    
 
 @api_view(['DELETE'])
 def concesionario_eliminar(request,concesionario_id):
@@ -289,7 +313,7 @@ def concesionario_eliminar(request,concesionario_id):
 def evento_obtener(request,evento_id):
     evento = Evento.objects.all()
     evento = evento.get(id=evento_id)
-    serializer = ConcesionarioSeializerMejorado(evento)
+    serializer = EventoSeializerMejorado(evento)
     return Response(serializer.data)
 
 
@@ -317,6 +341,22 @@ def evento_editar(request,evento_id):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+@api_view(['PATCH'])
+def evento_actualizar_nombre(request,evento_id):
+    serializers = EventoSerializerCreate(data=request.data)
+    evento = Evento.objects.get(id=evento_id)
+    serializers = EventoSerializerActualizarNombre(data=request.data,instance=evento)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Evento EDITADO")
+        except Exception as error:
+            print("Error 500:"+repr(error))
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)    
 
     
 @api_view(['DELETE'])
