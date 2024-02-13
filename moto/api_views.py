@@ -328,3 +328,53 @@ def evento_eliminar(request,evento_id):
     except Exception as error:
         return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+
+class registrar_usuario(generics.CreateAPIView):
+    serializer_class = UsuarioSerializerRegistro
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        serializers = UsuarioSerializerRegistro(data=request.data)
+        if serializers.is_valid():
+            try:
+                rol = request.data.get('rol')
+                user = UsuarioLogin.objects.create_user(
+                        username = serializers.data.get("username"), 
+                        email = serializers.data.get("email"), 
+                        password = serializers.data.get("password1"),
+                        rol = rol,
+                        )
+                if(rol == UsuarioLogin.CLIENTE):
+                    grupo = Group.objects.get(name='Clientes') 
+                    grupo.user_set.add(user)
+                    clientes = cliente.objects.create( usuario = user)
+                    clientes.save()
+                elif(rol == UsuarioLogin.TRABAJADOR):
+                    grupo = Group.objects.get(name='Trabajadores') 
+                    grupo.user_set.add(user)
+                    trabajadores = TrabajadorLogin.objects.create(usuario = user)
+                    trabajadores.save()
+                usuarioSerializado = UsuarioSerializer(user)
+                return Response(usuarioSerializado.data)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+from oauth2_provider.models import AccessToken     
+@api_view(['GET'])
+def obtener_usuario_token(request,token):
+    ModeloToken = AccessToken.objects.get(token=token)
+    usuario = Usuario.objects.get(id=ModeloToken.id)
+    serializer = UsuarioSerializer(usuario)
+    return Response(serializer.data)
+    
+
+    
