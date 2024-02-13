@@ -212,7 +212,7 @@ class UsuarioSerializerRegistro(serializers.Serializer):
     rol = serializers.IntegerField()
     
     def validate_username(self,username):
-        usuario = Usuario.objects.filter(username=username).first()
+        usuario = UsuarioLogin.objects.filter(username=username).first()
         if(not usuario is None):
             raise serializers.ValidationError('Ya existe un usuario con ese nombre')
         return username

@@ -28,6 +28,7 @@ class UploadedFile(models.Model):
 
 class Usuario(BaseModel):
     nombre = models.CharField(max_length=50)
+
     apellidos = models.CharField(max_length=100)
     correo_electronico = models.CharField(max_length=100, unique=True, blank=True)
     contraseña = models.CharField(max_length=50)
