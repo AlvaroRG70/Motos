@@ -380,7 +380,7 @@ class registrar_usuario(generics.CreateAPIView):
         serializers = UsuarioSerializerRegistro(data=request.data)
         if serializers.is_valid():
             try:
-                rol = request.data.get('rol')
+                rol = int(request.data.get('rol'))
                 user = UsuarioLogin.objects.create_user(
                         username = serializers.data.get("username"), 
                         email = serializers.data.get("email"), 
@@ -397,9 +397,10 @@ class registrar_usuario(generics.CreateAPIView):
                     grupo.user_set.add(user)
                     trabajadores = TrabajadorLogin.objects.create(usuario = user)
                     trabajadores.save()
-                usuarioSerializado = UsuarioSerializer(user)
+                usuarioSerializado = UsuarioLoginSeria(user)
                 return Response(usuarioSerializado.data)
             except Exception as error:
+                print(repr(error))
                 return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -412,8 +413,8 @@ from oauth2_provider.models import AccessToken
 @api_view(['GET'])
 def obtener_usuario_token(request,token):
     ModeloToken = AccessToken.objects.get(token=token)
-    usuario = Usuario.objects.get(id=ModeloToken.id)
-    serializer = UsuarioSerializer(usuario)
+    usuario = UsuarioLogin.objects.get(id=ModeloToken.id)
+    serializer = UsuarioLoginSeria(usuario)
     return Response(serializer.data)
     
 

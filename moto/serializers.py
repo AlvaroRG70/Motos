@@ -18,6 +18,11 @@ class UsuarioRealSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = '__all__'
         
+class UsuarioLoginSeria(serializers.ModelSerializer):
+    class Meta:
+        model = UsuarioLogin
+        fields = '__all__'
+        
         
 class UsuarioSeializerMejorado(serializers.ModelSerializer):
     usuario = UsuarioRealSerializer(read_only=True, many=True)
