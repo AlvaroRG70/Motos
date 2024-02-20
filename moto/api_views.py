@@ -193,73 +193,96 @@ def evento_busqueda_avanzada_api(request):
 
 @api_view(['POST'])
 def moto_create(request):  
-    serializers = MotoSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Moto CREADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.add_concesionario")):
+        serializers = MotoSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Moto CREADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
+        
+
+
 @api_view(['GET']) 
 def moto_obtener(request,moto_id):
+   
     moto = Moto.objects.prefetch_related("usuario")
     moto = moto.get(id=moto_id)
     serializer = UsuarioSeializerMejorado(moto)
     return Response(serializer.data)
 
+        
+
 @api_view(['PUT'])
 def moto_editar(request,moto_id):
-    moto = Moto.objects.get(id=moto_id)
-    serializers = UsuarioSeializerMejorado(data=request.data,instance=moto)
-    if serializers.is_valid():
-        try:    
-            serializers.save()
-            return Response("Moto EDITADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_concesionario")):
+        moto = Moto.objects.get(id=moto_id)
+        serializers = UsuarioSeializerMejorado(data=request.data,instance=moto)
+        if serializers.is_valid():
+            try:    
+                serializers.save()
+                return Response("Moto EDITADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['PATCH'])
 def moto_actualizar_nombre(request,moto_id):
-    serializers = MotoSerializerCreate(data=request.data)
-    moto = Moto.objects.get(id=moto_id)
-    serializers = MotoSerializerActualizarNombre(data=request.data,instance=moto)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Moto EDITADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_concesionario")):
+    
+        serializers = MotoSerializerCreate(data=request.data)
+        moto = Moto.objects.get(id=moto_id)
+        serializers = MotoSerializerActualizarNombre(data=request.data,instance=moto)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Moto EDITADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['DELETE'])
 def moto_eliminar(request,moto_id):
-    moto = Moto.objects.get(id=moto_id)
-    try:
-        moto.delete()
-        return Response("Moto ELIMINADO")
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_concesionario")):
+
+        moto = Moto.objects.get(id=moto_id)
+        try:
+            moto.delete()
+            return Response("Moto ELIMINADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
 
 
 
 
 @api_view(['POST'])
 def concesionario_create(request):  
-    serializers = ConcesionarioSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Concesionario CREADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.add_concesionario")):
+    
+        serializers = ConcesionarioSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Concesionario CREADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['GET']) 
 def concesionario_obtener(request,concesionario_id):
@@ -271,42 +294,54 @@ def concesionario_obtener(request,concesionario_id):
     
 @api_view(['PUT'])
 def concesionario_editar(request,concesionario_id):
-    concesionario = Concesionario.objects.get(id=concesionario_id)
-    serializers = ConcesionarioSeializerMejorado(data=request.data,instance=concesionario)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Concesionario EDITADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_concesionario")):
+
+        concesionario = Concesionario.objects.get(id=concesionario_id)
+        serializers = ConcesionarioSeializerMejorado(data=request.data,instance=concesionario)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Concesionario EDITADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['PATCH'])
 def concesionario_actualizar_nombre(request,concesionario_id):
-    serializers = ConcesionarioSerializerCreate(data=request.data)
-    concesionario = Concesionario.objects.get(id=concesionario_id)
-    serializers = ConcesionarioSerializerActualizarNombre(data=request.data,instance=concesionario)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Concesionario EDITADO")
-        except Exception as error:
-            print("Error 500:"+repr(error))
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_concesionario")):
+    
+        serializers = ConcesionarioSerializerCreate(data=request.data)
+        concesionario = Concesionario.objects.get(id=concesionario_id)
+        serializers = ConcesionarioSerializerActualizarNombre(data=request.data,instance=concesionario)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Concesionario EDITADO")
+            except Exception as error:
+                print("Error 500:"+repr(error))
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)  
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)  
 
     
 
 @api_view(['DELETE'])
 def concesionario_eliminar(request,concesionario_id):
-    concesionario = Concesionario.objects.get(id=concesionario_id)
-    try:
-        concesionario.delete()
-        return Response("Concesionario ELIMINADO")
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.delete_concesionario")):
+    
+        concesionario = Concesionario.objects.get(id=concesionario_id)
+        try:
+            concesionario.delete()
+            return Response("Concesionario ELIMINADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED) 
     
     
 @api_view(['GET']) 
@@ -319,54 +354,70 @@ def evento_obtener(request,evento_id):
 
 @api_view(['POST'])
 def evento_create(request):  
-    serializers = EventoSerializerCreate(data=request.data)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Evento CREADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.add_evento")):
+    
+        serializers = EventoSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Evento CREADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['PUT'])
 def evento_editar(request,evento_id):
-    evento = Evento.objects.get(id=evento_id)
-    serializers = EventoSeializerMejorado(data=request.data,instance=evento)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("evento EDITADO")
-        except Exception as error:
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_evento")):
+    
+        evento = Evento.objects.get(id=evento_id)
+        serializers = EventoSeializerMejorado(data=request.data,instance=evento)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("evento EDITADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
     
     
 @api_view(['PATCH'])
 def evento_actualizar_nombre(request,evento_id):
-    serializers = EventoSerializerCreate(data=request.data)
-    evento = Evento.objects.get(id=evento_id)
-    serializers = EventoSerializerActualizarNombre(data=request.data,instance=evento)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Evento EDITADO")
-        except Exception as error:
-            print("Error 500:"+repr(error))
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.change_evento")):
+    
+        serializers = EventoSerializerCreate(data=request.data)
+        evento = Evento.objects.get(id=evento_id)
+        serializers = EventoSerializerActualizarNombre(data=request.data,instance=evento)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Evento EDITADO")
+            except Exception as error:
+                print("Error 500:"+repr(error))
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST) 
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)   
 
     
 @api_view(['DELETE'])
 def evento_eliminar(request,evento_id):
-    evento = Evento.objects.get(id=evento_id)
-    try:
-        evento.delete()
-        return Response("Evento ELIMINADO")
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("moto.delete_evento")):
+    
+        evento = Evento.objects.get(id=evento_id)
+        try:
+            evento.delete()
+            return Response("Evento ELIMINADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)   
     
     
 from rest_framework import generics
