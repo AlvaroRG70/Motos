@@ -36,10 +36,16 @@ class FileUploadAPIView(APIView):
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
 def moto_list(request):
-    
     motos = Moto.objects.all()
     serializer = UsuarioSeializerMejorado(motos, many=True)
-    return Response(serializer.data)
+    data = serializer.data
+
+    # Agregar la URL de la imagen a cada moto en la respuesta
+    for moto_data in data:
+        moto = Moto.objects.get(id=moto_data['id'])
+        moto_data['imagen_url'] = moto.imagen.url if moto.imagen else None
+
+    return Response(data)
 
 @api_view(['GET'])
 def concesionario_list(request):    
@@ -220,7 +226,7 @@ def moto_obtener(request,moto_id):
 
 @api_view(['PUT'])
 def moto_editar(request,moto_id):
-    if(request.user.has_perm("moto.change_concesionario")):
+    if(request.user.has_perm("moto.change_moto")):
         moto = Moto.objects.get(id=moto_id)
         serializers = UsuarioSeializerMejorado(data=request.data,instance=moto)
         if serializers.is_valid():
@@ -236,7 +242,7 @@ def moto_editar(request,moto_id):
     
 @api_view(['PATCH'])
 def moto_actualizar_nombre(request,moto_id):
-    if(request.user.has_perm("moto.change_concesionario")):
+    if(request.user.has_perm("moto.change_moto")):
     
         serializers = MotoSerializerCreate(data=request.data)
         moto = Moto.objects.get(id=moto_id)
@@ -254,7 +260,7 @@ def moto_actualizar_nombre(request,moto_id):
     
 @api_view(['DELETE'])
 def moto_eliminar(request,moto_id):
-    if(request.user.has_perm("moto.change_concesionario")):
+    if(request.user.has_perm("moto.delete_moto")):
 
         moto = Moto.objects.get(id=moto_id)
         try:

@@ -59,6 +59,7 @@ class Moto(BaseModel):
     modelo = models.CharField(max_length=50)
     año = models.IntegerField()
     precio = models.FloatField()
+    imagen = models.FileField(default=None,blank=True)
 
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
@@ -147,6 +148,7 @@ class Evento(BaseModel):
     hora = models.TimeField()
     ubicacion = models.CharField(max_length=50)
     descripcion = models.TextField()
+    kms = models.FloatField()
     usuario = models.ManyToManyField(Usuario, through="ReservaEvento", related_name = "reserva_evento")
     def __str__(self):
         return self.nombre

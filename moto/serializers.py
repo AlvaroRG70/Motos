@@ -30,7 +30,7 @@ class UsuarioSeializerMejorado(serializers.ModelSerializer):
 
     class Meta:
         model = Moto
-        fields = ('id','nombre', 'marca', 'modelo', 'año', 'precio', 'usuario')
+        fields = ('id','imagen','nombre', 'marca', 'modelo', 'año', 'precio', 'imagen', 'usuario')
 
 
 

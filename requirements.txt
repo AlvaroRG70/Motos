@@ -8,3 +8,5 @@ django-automatic-crud==1.2.0
 djangorestframework~=3.14.0
 django-oauth-toolkit~=2.3.0
 djangorestframework-simplejwt
+django-allauth
+
