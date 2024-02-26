@@ -114,6 +114,22 @@ class Concesionario(BaseModel):
     def __str__(self):
         return self.nombre
     
+    
+class Valoracion(models.Model):
+    PUNTUACION = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+    )
+    
+    concesionario = models.ForeignKey(Concesionario, on_delete=models.CASCADE, related_name='valoraciones')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='valoraciones')
+    puntuacion = models.IntegerField(choices=PUNTUACION)
+    comentario = models.TextField()
+
+    
 
 class Taller(BaseModel):
     nombre = models.CharField(max_length=50)

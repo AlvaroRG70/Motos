@@ -24,7 +24,7 @@ class UsuarioLoginSeria(serializers.ModelSerializer):
         fields = '__all__'
         
         
-class UsuarioSeializerMejorado(serializers.ModelSerializer):
+class MotoSerializerMejorado(serializers.ModelSerializer):
     usuario = UsuarioRealSerializer(read_only=True, many=True)
     marca = serializers.CharField(source='get_marca_display')
 
@@ -33,15 +33,20 @@ class UsuarioSeializerMejorado(serializers.ModelSerializer):
         fields = ('id','imagen','nombre', 'marca', 'modelo', 'año', 'precio', 'imagen', 'usuario')
 
 
-
+class ValoracionSerializer(serializers.ModelSerializer):
+    usuario = UsuarioRealSerializer()
+    class Meta:
+        model = Valoracion
+        fields = ['id', 'concesionario', 'usuario', 'puntuacion', 'comentario']
 
 #serializer concesionario
 class ConcesionarioSeializerMejorado(serializers.ModelSerializer):
-    moto = UsuarioSerializer(read_only=True, many=True)
+    moto = MotoSerializerMejorado(read_only=True, many=True)
+    valoraciones = ValoracionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Concesionario
-        fields = ('id','nombre', 'ubicacion', 'telefono', 'fecha_apertura', 'descripcion', 'moto')
+        fields = ('id','nombre', 'ubicacion', 'telefono', 'fecha_apertura', 'descripcion', 'moto', 'valoraciones')
         
 
 #serializer evento
@@ -50,9 +55,13 @@ class EventoSeializerMejorado(serializers.ModelSerializer):
 
     class Meta:
         model = Evento
-        fields = ('id','nombre', 'fecha', 'hora', 'ubicacion', 'descripcion', 'usuario')
+        fields = ('id','nombre', 'fecha', 'hora', 'ubicacion', 'descripcion','kms', 'usuario')
         
         
+
+#create valoraciones      
+        
+
 #create
 
 class MotoSerializerCreate(serializers.ModelSerializer):
@@ -146,6 +155,8 @@ class ConcesionarioSerializerCreate(serializers.ModelSerializer):
         if len(moto) < 1:
             raise serializers.ValidationError('Debe seleccionar al menos un moto')
         return moto
+    
+
     
 class ConcesionarioSerializerActualizarNombre(serializers.ModelSerializer):
     class Meta:

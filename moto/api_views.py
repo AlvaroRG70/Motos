@@ -37,7 +37,7 @@ class FileUploadAPIView(APIView):
 #@permission_classes([IsAuthenticated])
 def moto_list(request):
     motos = Moto.objects.all()
-    serializer = UsuarioSeializerMejorado(motos, many=True)
+    serializer = MotoSerializerMejorado(motos, many=True)
     data = serializer.data
 
     # Agregar la URL de la imagen a cada moto en la respuesta
@@ -69,6 +69,21 @@ def usuario_list(request):
     serializer = UsuarioRealSerializer(usuarios, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def valoracion_list(request):
+    
+    valoraciones = Valoracion.objects.all()
+    serializer = ValoracionSerializer(valoraciones, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def concesionario_list(request):    
+    
+    conc = Concesionario.objects.all()
+    serializer = ConcesionarioSeializerMejorado(conc, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def moto_buscar_api(request):
@@ -79,7 +94,7 @@ def moto_buscar_api(request):
             texto = formulario.cleaned_data.get('textoBusqueda')
             motos = Moto.objects.prefetch_related("usuario")
             motos = motos.filter(Q(nombre__contains=texto) | Q(modelo__contains=texto)).all()
-            serializer = UsuarioSeializerMejorado(motos, many=True)
+            serializer = MotoSerializerMejorado(motos, many=True)
             return Response(serializer.data)
         else:
             return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -124,7 +139,7 @@ def moto_buscar_avanzado_api(request):
                     
                 
                 motos = QSmotos.all()
-                serializer = UsuarioSeializerMejorado(motos, many=True)
+                serializer = MotoSerializerMejorado(motos, many=True)
                 
                 return Response(serializer.data)
             else:
@@ -219,7 +234,7 @@ def moto_obtener(request,moto_id):
    
     moto = Moto.objects.prefetch_related("usuario")
     moto = moto.get(id=moto_id)
-    serializer = UsuarioSeializerMejorado(moto)
+    serializer = MotoSerializerMejorado(moto)
     return Response(serializer.data)
 
         
@@ -228,7 +243,7 @@ def moto_obtener(request,moto_id):
 def moto_editar(request,moto_id):
     if(request.user.has_perm("moto.change_moto")):
         moto = Moto.objects.get(id=moto_id)
-        serializers = UsuarioSeializerMejorado(data=request.data,instance=moto)
+        serializers = MotoSerializerMejorado(data=request.data,instance=moto)
         if serializers.is_valid():
             try:    
                 serializers.save()

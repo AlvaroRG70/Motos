@@ -16,6 +16,7 @@ from .models import ReservaEvento
 from .models import ValoracionMoto
 from .models import CuentaBancaria
 from .models import Promocion
+from .models import Valoracion
 
 
 # Register your models here.
@@ -36,5 +37,7 @@ admin.site.register(ValoracionMoto)
 admin.site.register(CuentaBancaria)
 admin.site.register(Promocion)
 admin.site.register(UsuarioLogin)
+admin.site.register(Valoracion)
+
 
 
