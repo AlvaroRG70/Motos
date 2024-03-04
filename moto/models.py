@@ -60,6 +60,8 @@ class Moto(BaseModel):
     año = models.IntegerField()
     precio = models.FloatField()
     imagen = models.FileField(default=None,blank=True)
+    caballos = models.IntegerField(null=True)
+    consumo = models.FloatField(null=True) 
 
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")

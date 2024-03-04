@@ -30,14 +30,14 @@ class MotoSerializerMejorado(serializers.ModelSerializer):
 
     class Meta:
         model = Moto
-        fields = ('id','imagen','nombre', 'marca', 'modelo', 'año', 'precio', 'imagen', 'usuario')
+        fields = ('id','imagen','nombre', 'marca', 'modelo', 'año', 'precio', 'imagen', 'caballos', 'consumo', 'usuario')
 
 
 class ValoracionSerializer(serializers.ModelSerializer):
     usuario = UsuarioRealSerializer()
     class Meta:
         model = Valoracion
-        fields = ['id', 'concesionario', 'usuario', 'puntuacion', 'comentario']
+        fields = ('id', 'concesionario', 'usuario', 'puntuacion', 'comentario')
 
 #serializer concesionario
 class ConcesionarioSeializerMejorado(serializers.ModelSerializer):
@@ -69,7 +69,7 @@ class MotoSerializerCreate(serializers.ModelSerializer):
     class Meta:
         model = Moto
         fields = ['nombre','marca','modelo',
-                  'año','precio','usuario']
+                  'año','precio','usuario', 'caballos', 'consumo']
     
     def validate_nombre(self,nombre):
         MotoNombre = Moto.objects.filter(nombre=nombre).first()
@@ -109,6 +109,29 @@ class MotoSerializerActualizarNombre(serializers.ModelSerializer):
         if(not motoNombre is None and motoNombre.id != self.instance.id):
             raise serializers.ValidationError('Ya existe una moto con ese nombre')
         return nombre
+
+
+class ValoracionSerializerCreate(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = Valoracion
+        fields = ['id', 'concesionario', 'usuario', 'puntuacion', 'comentario']
+    
+    def validate_puntuacion(self,puntuacion):
+        if puntuacion < 0 and puntuacion > 5:
+             raise serializers.ValidationError('Tiene que ser positivo')
+        return puntuacion
+    
+    
+    def validate_usuario(self,usuario):
+        if usuario is None or usuario.id is None:
+            raise serializers.ValidationError('Debe seleccionar al menos un usuario')
+        return usuario
+    
+    def validate_concesionario(self, concesionario):
+        if concesionario is None or concesionario.id is None:
+            raise serializers.ValidationError('Debe seleccionar al menos un concesionario válido')
+        return concesionario
 
 
 class ConcesionarioSerializerCreate(serializers.ModelSerializer):

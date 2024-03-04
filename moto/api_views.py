@@ -47,6 +47,22 @@ def moto_list(request):
 
     return Response(data)
 
+
+@api_view(['GET'])
+def motos_filtradas_por_caballos(request, caballos):
+
+    motos_filtradas = Moto.objects.filter(caballos=caballos).order_by('+caballos')
+    serializer = MotoSerializerMejorado(motos_filtradas, many=True)
+    data = serializer.data
+    for moto_data in data:
+        moto = Moto.objects.get(id=moto_data['id'])
+        moto_data['imagen_url'] = moto.imagen.url if moto.imagen else None
+
+    return Response(data)
+
+
+
+
 @api_view(['GET'])
 def concesionario_list(request):    
     
@@ -287,7 +303,21 @@ def moto_eliminar(request,moto_id):
         return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
 
 
-
+@api_view(['POST'])
+def valoracion_create(request):  
+    if(request.user.has_perm("moto.add_valoracion")):
+    
+        serializers = ValoracionSerializerCreate(data=request.data)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("valoracion CREADO")
+            except Exception as error:
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("No tiene permisos", status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
 def concesionario_create(request):  
@@ -466,7 +496,7 @@ class registrar_usuario(generics.CreateAPIView):
                     clientes.save()
                 elif(rol == UsuarioLogin.TRABAJADOR):
                     grupo = Group.objects.get(name='Trabajadores') 
-                    grupo.user_set.add(user)
+                    grupo.user_set.add(user)    
                     trabajadores = TrabajadorLogin.objects.create(usuario = user)
                     trabajadores.save()
                 usuarioSerializado = UsuarioLoginSeria(user)

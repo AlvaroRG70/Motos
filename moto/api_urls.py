@@ -40,7 +40,11 @@ urlpatterns = [
     path('usuario/token/<str:token>',obtener_usuario_token),
     
     
-    path('concesionarios/valoraciones', valoracion_list)
+    path('concesionarios/valoraciones', valoracion_list),
+    path('valoraciones/crear', valoracion_create),
+    
+    path('motos/caballos', motos_filtradas_por_caballos),
+    
     
     
 ]
