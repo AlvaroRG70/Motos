@@ -49,9 +49,16 @@ def moto_list(request):
 
 
 @api_view(['GET'])
-def motos_filtradas_por_caballos(request, caballos):
+def motos_filtradas_por_caballos(request):
 
-    motos_filtradas = Moto.objects.filter(caballos=caballos).order_by('+caballos')
+    # 0- Descendete
+    # 1- Ascendente
+    # if( orden == 0):
+    #      motos_filtradas = Moto.objects.order_by('-caballos')
+    # else:
+    #      motos_filtradas = Moto.objects.order_by('caballos')
+    
+    motos_filtradas = Moto.objects.order_by('-caballos')
     serializer = MotoSerializerMejorado(motos_filtradas, many=True)
     data = serializer.data
     for moto_data in data:
@@ -515,7 +522,7 @@ from oauth2_provider.models import AccessToken
 @api_view(['GET'])
 def obtener_usuario_token(request,token):
     ModeloToken = AccessToken.objects.get(token=token)
-    usuario = UsuarioLogin.objects.get(id=ModeloToken.id)
+    usuario = UsuarioLogin.objects.get(id=ModeloToken.user_id)
     serializer = UsuarioLoginSeria(usuario)
     return Response(serializer.data)
     

@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .api_views import *
 
 
@@ -44,7 +45,5 @@ urlpatterns = [
     path('valoraciones/crear', valoracion_create),
     
     path('motos/caballos', motos_filtradas_por_caballos),
-    
-    
     
 ]
