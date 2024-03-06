@@ -130,6 +130,10 @@ class Valoracion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='valoraciones')
     puntuacion = models.IntegerField(choices=PUNTUACION)
     comentario = models.TextField()
+    
+class MotosReservada(models.Model):
+    nMotos = models.IntegerField(default=0)
+    
 
     
 

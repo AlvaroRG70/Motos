@@ -67,7 +67,17 @@ def motos_filtradas_por_caballos(request):
 
     return Response(data)
 
+@api_view(['PATCH'])
+def reservar_moto(request, pk):
+    try:
 
+        moto_reservada = MotosReservada.objects.get(pk=pk)
+        moto_reservada.nMotos += 1
+        moto_reservada.save()
+        
+        return Response({'nMotos': moto_reservada.nMotos})
+    except MotosReservada.DoesNotExist:
+        return Response(status=404)
 
 
 @api_view(['GET'])
