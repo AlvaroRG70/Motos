@@ -67,18 +67,37 @@ def motos_filtradas_por_caballos(request):
 
     return Response(data)
 
+from django.db.models import Count
+from django.http import JsonResponse
+from datetime import datetime
+
 @api_view(['POST'])
-def reservar_moto(request, pk):
-    try:
+def informe_motos_reservadas(request):
+    if request.method == 'POST':
+        # Obtener el mes y año actual
+        fecha_actual = datetime.now()
+        mes_actual = fecha_actual.month
+        año_actual = fecha_actual.year
 
-        moto_reservada = MotosReservada.objects.get(pk=pk)
-        moto_reservada.nMotos += 1
-        moto_reservada.save()
-        
-        return Response({'nMotos': moto_reservada.nMotos})
-    except Exception as error:
-        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # Filtrar las motos reservadas del mes actual
+        motos_reservadas = MotosReservada.objects.filter(fecha__month=mes_actual, fecha__year=año_actual)
 
+        # Contar la cantidad de reservas para cada moto
+        reservas_por_moto = motos_reservadas.values('moto__nombre').annotate(reservas=Count('moto'))
+
+        # Preparar los datos para la respuesta
+        informe = {
+            'mes': mes_actual,
+            'año': año_actual,
+            'motos_reservadas': [
+                {'nombre': reserva['moto__nombre'], 'reservas': reserva['reservas']} 
+                for reserva in reservas_por_moto
+            ]
+        }
+
+        return JsonResponse(informe)
+    else:
+        return JsonResponse({'error': 'Método HTTP no admitido'}, status=405)
 
 @api_view(['GET'])
 def concesionario_list(request):    
