@@ -17,6 +17,7 @@ from .models import ValoracionMoto
 from .models import CuentaBancaria
 from .models import Promocion
 from .models import Valoracion
+from .models import MotosReservada
 
 
 # Register your models here.
@@ -38,6 +39,6 @@ admin.site.register(CuentaBancaria)
 admin.site.register(Promocion)
 admin.site.register(UsuarioLogin)
 admin.site.register(Valoracion)
-
+admin.site.register(MotosReservada)
 
 

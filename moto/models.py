@@ -65,6 +65,7 @@ class Moto(BaseModel):
 
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
+    reserva = models.IntegerField(default=None)
     
     def __str__(self):
         return self.nombre
@@ -132,7 +133,9 @@ class Valoracion(models.Model):
     comentario = models.TextField()
     
 class MotosReservada(models.Model):
-    nMotos = models.IntegerField(default=0)
+    usuario = models.ManyToManyField(Usuario)
+    moto = models.ManyToManyField(Moto)
+    fecha = models.DateField()
     
 
     

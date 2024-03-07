@@ -67,7 +67,7 @@ def motos_filtradas_por_caballos(request):
 
     return Response(data)
 
-@api_view(['PATCH'])
+@api_view(['POST'])
 def reservar_moto(request, pk):
     try:
 
@@ -76,8 +76,8 @@ def reservar_moto(request, pk):
         moto_reservada.save()
         
         return Response({'nMotos': moto_reservada.nMotos})
-    except MotosReservada.DoesNotExist:
-        return Response(status=404)
+    except Exception as error:
+        return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
