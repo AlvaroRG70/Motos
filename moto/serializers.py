@@ -31,6 +31,38 @@ class MotoSerializerMejorado(serializers.ModelSerializer):
     class Meta:
         model = Moto
         fields = ('id','imagen','nombre', 'marca', 'modelo', 'año', 'precio', 'imagen', 'caballos', 'consumo', 'usuario')
+        
+
+        
+
+class MotosReservadaSerializer(serializers.ModelSerializer):
+    usuario = UsuarioRealSerializer(read_only=True, many=True)
+    moto = MotoSerializerMejorado(read_only=True, many=True)
+
+    class Meta:
+        model = MotosReservada
+        fields = ('id', 'usuario', 'moto', 'fecha')
+        
+        
+class ReservaSerializerCreate(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = MotosReservada
+        fields = ['id', 'usuario', 'moto', 'fecha']
+        
+    def validate_usuario(self,usuario):
+        if usuario is None or usuario.id is None:
+            raise serializers.ValidationError('Debe seleccionar al menos un usuario')
+        return usuario
+    
+    def validate_moto(self, moto):
+        if moto is None or moto.id is None:
+            raise serializers.ValidationError('Debe seleccionar al menos un moto válido')
+        return moto
+    
+
+
+
 
 
 class ValoracionSerializer(serializers.ModelSerializer):

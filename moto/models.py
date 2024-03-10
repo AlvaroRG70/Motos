@@ -65,7 +65,6 @@ class Moto(BaseModel):
 
     usuario = models.ManyToManyField(Usuario, through="VentaMoto", related_name="moto_vendida")
     comentador = models.ManyToManyField(Usuario, through="ValoracionMoto", related_name="moto_comentada")
-    reserva = models.IntegerField(default=None)
     
     def __str__(self):
         return self.nombre
@@ -135,7 +134,7 @@ class Valoracion(models.Model):
 class MotosReservada(models.Model):
     usuario = models.ManyToManyField(Usuario)
     moto = models.ManyToManyField(Moto)
-    fecha = models.DateField()
+    fecha = models.DateField(default=timezone.now)
     
 
     

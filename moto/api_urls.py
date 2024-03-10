@@ -45,7 +45,10 @@ urlpatterns = [
     path('valoraciones/crear', valoracion_create),
     
     path('motos/caballos', motos_filtradas_por_caballos),
-    path('motos/reservar', informe_motos_reservadas),
+    path('reservas/lista', reservas_list),
+    path('reservas/crear', reserva_create),
+    
+    # path('motos/reservar', informe_motos_reservadas),
     
     
     
